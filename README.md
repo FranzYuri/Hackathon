@@ -25,7 +25,7 @@ Você encontra todos os issues na aba [Issues](https://github.com/Projeto-Jupite
 
 Leia todos os issues e utilize o filtro de labels para te ajudar a escolher seu primeiro desafio. Sinta-se a vontade para mandar mensagens nos issues tirando dúvidas ou pedindo mais detalhes antes ou até depois de se decidir. 
 
-Quando estiver decidido, se dirija à barra laterla direita do issue e em **Assignees**, clique na opção **assign yourself** para registrar você como responsável por resolver um issue. E se já tiver outro responsável? Não tem problema, mais de uma pessoa pode resolver o mesmo desafio! Lembre-se que você pode resolver quantos issues quiser durante essa Hackathon! E se precisar de ajuda, use a abuse dos comentários no issue para nossos organizadores de ajudarem.
+Quando estiver decidido, se dirija à barra lateral direita do issue e em **Assignees**, clique na opção **assign yourself** para registrar você como responsável por resolver um issue. E se já tiver outro responsável? Não tem problema, mais de uma pessoa pode resolver o mesmo desafio! Lembre-se que você pode resolver quantos issues quiser durante essa Hackathon! E se precisar de ajuda, use a abuse dos comentários no issue para nossos organizadores de ajudarem.
 
 ![GIF - Escolhendo um issue](https://github.com/Projeto-Jupiter/Hackathon/raw/master/images/escolhendo_um_issue.gif)
 
@@ -46,7 +46,7 @@ Todas as contribuições que você fizer, será em um branch.
 
 ## Fazendo seu primeiro commit
 
-Commit? Isso mesmo, fazer/dar um commit é simplesmente a ação de editar, de alguma forma, os arquivos do seu branch. Seja editando um ou mais arquivos, adicionando novos ou ainda removendo arquivos velhos.
+Commit? Isso mesmo, fazer/dar um commit é simplesmente a ação de editar, de alguma forma, os arquivos do seu branch. Seja editando um ou mais arquivos, adicionando novos ou ainda removendo arquivos velhos. Mais detalhes no [GitHub Guides](https://guides.github.com/introduction/flow/)
 
 Para fazer um commit pelo GitHub mesmo, você deve primeiro garantir que está no seu branch. Isto é, verifique que não está no master, mas sim no branch que você criou.
 
@@ -67,11 +67,31 @@ Por fim, verifique que está realizando o commit no branch correto e aperte o bo
 
 ## Fazendo um pull request
 
-Com o commit realizado, nosso branch, ou ramificação da linha de desenvolvimento, está diferente da linha principal, a master. Se julgarmos que já está na hora de migrar nossas alterações para a master, devemos realizar um **pull request**.
+Com o commit realizado, nosso branch, ou ramificação da linha de desenvolvimento, está diferente da linha principal, a master. Se julgarmos que já está na hora de migrar nossas alterações para a master, devemos realizar um **pull request**. Mais detalhes no [GitHub Guides](https://guides.github.com/introduction/flow/)
 
-Um **pull request** 
+Um **pull request** é um pedido para adicionar as alterações feitas no nosso branch ao master. Assim, trata-se de uma operação feita para um branch inteiro, não apenas para um único commit (a não ser que tenhamos apenas um commit no nosso branch, como é o caso agora).
+
+Para criar um pull request, volte a página principal do seu branch e clique em `Compare & pull request`. Ao clicar, uma nova página será aberta, onde você pode dar um nome à sua solicitação e descrevé-la com mais detalhes. Além disso, rolando a página para baixo, poderá ver as modificações feitas nos arquivos, em comparação com àqueles que estão no master.
+
+Após adicionar a descrição, é preciso adicionar os **revisores** do pull request. Os **revisores** são responsáveis por revisarem as edições e aprovarem ou não a junção do seu branch com o master. No caso da Hackathon, os revisore são os organizadores! Então, pode adicionar qualquer um deles ou mesmo o time de revisores.
+
+Por fim, basta clicar em `Create pull request` e esperar a revisão da organização! Quando sua revisão for aprovada, ganhará os pontos do desafio e suas edições poderam ir para o master!
+
+Mas lembre-se que é possível que os organizadores exijam alguma mudança no seu código, então fique atento se for avisado por algum deles!
+
+![GIF - Fazendo um pull request](https://github.com/Projeto-Jupiter/Hackathon/raw/master/images/fazendo_um_pull_request.gif)
 
 ## Resumo
+
+É isso, com seu pull request aprovado, você acaba de contribuir para o nosso Projeto Jupiter e conquistar pontos na Hackathon!
+
+Vamos relembrar os passos:
+
+1. Criar um branch novo.
+2. Editar arquivos e dar commit.
+3. Fazer um pull request para juntar suas edições ao master.
+4. Aguardar a aprovação dos revisores.
+5. Ganhar pontos!
 
 # COMUNICAÇÃO
 
