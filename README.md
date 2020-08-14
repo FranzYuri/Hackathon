@@ -114,7 +114,20 @@ Todos os participantes podem ver seus comentários... quem sabe um participante 
 
 # CRONOGRAMA
 
+## Sexta
+21:00 - Abertura
 
+21:00 - Início dos dommits
+
+## Sábado
+21:00 - Apresentações parciais
+
+## Domingo
+20:00 - Encerramento dos commits
+
+20:00 - Apresentações finais
+
+22:00 - Encerramento e premiação
 
 # REGRAS!
 
