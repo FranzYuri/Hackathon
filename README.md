@@ -151,7 +151,7 @@ Os desafios, ou issues, são dividos em 3 níveis de dificuldade:
 
 O nível de dificuldade de um determinado desafio pode ser encontrado como um dos labels do desafio e também na lista de todos os desafios divulgados. A organização pode alterar a dificuldade de um desafio a qualquer momento, mas apenas para um nível mais difícil.
 
-# Bônus
+## Bônus
 
 Os organizadores podem prestigiar equipes pelos seus trabalhos com resultados além do esperado com uma pontuação de bônus, limitada entre 1 a 5 pontos para cada desafio.
 
