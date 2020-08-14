@@ -95,32 +95,68 @@ Vamos relembrar os passos:
 
 # COMUNICAÇÃO
 
+Temos alguns canais de comunicação principais! Durante a Hackathon, usaremos o Discord e o GitHub também. Mais detalhes a seguir.
+
 ## Discord
 
-## Issues
+Todos deveriam estar no server da Hackathon já. Ainda não está? Sem problemas, entre em contato com alguém da organização por WhatsApp mesmo que vamos te ajudar!
 
-## Pull Requests
+No discord, temos o canal de avisos e o de discussão, que todos podem ver. Além disso, há um para cada grupo, porém são privados e apenas os membros do respectivo grupo e os organizadores podem se comunicar por lá. Ótimo para aquelas dúvidas que você julga não ser relevante para os outros participantes. Mas sinta-se a vontade de usar o canal que quiser.
+
+## GitHub
+
+Aqui pelo GitHub vamos nos comunicar por meio dos comentários nos **issues** e **pull requests**.
+
+Qualquer dúvida sobre código, como implementar, por onde começar, enfim, qualquer coisa relacionada ao desafio que escolheu, pode mandar como comentário no respectivo issue que vamos te ajudar!
+
+Todos os participantes podem ver seus comentários... quem sabe um participante não acaba ajudando o outro também?
+
 
 # CRONOGRAMA
 
+
+
 # REGRAS!
 
-## PAZ E AMOR
+## Paz e Amor
 
-## PONTUAÇÃO
+Estamos em família! Que essa seja uma competição saúdavel. Mals comportamentos não serão tolerados, mas isso não é problema, sei que entre nós há apenas paz e amor.
 
-# USANDO O VSCODE
+## Novos Desafios
 
-## Integrando com o GitHub
+Teve outra ideia que ainda não está na lista de desafios/issues? Ou foi resolver um issue e acabou fazendo muito mais coisa? Sem problemas, avise os organizadores! Estamos dispostos a adicionar novos desafios a qualquer momento.
 
-## Staging, Commits e Sincronização
+Sempre que um novo desafio for criado, todos os participantes serão avisados.
 
-# DEBUGANDO NO VSCODE
+## Pontuação
 
-## DEBUGANDO UM ARQUIVO
+Os desafios, ou issues, são dividos em 3 níveis de dificuldade:
 
-## DEBUGANDO O ROCKETPY
+- Easy: 5 pontos
+- Medium: 20 pontos
+- Hard: 50 pontos
 
+O nível de dificuldade de um determinado desafio pode ser encontrado como um dos labels do desafio e também na lista de todos os desafios divulgados. A organização pode alterar a dificuldade de um desafio a qualquer momento, mas apenas para um nível mais difícil.
+
+# Bônus
+
+Os organizadores podem prestigiar equipes pelos seus trabalhos com resultados além do esperado com uma pontuação de bônus, limitada entre 1 a 5 pontos para cada desafio.
+
+Para o bônus, os organizadores levaram em conta soluções que:
+
+- Vão além do esperado;
+- Possuem um padrão de código bem documentado e bem escrito;
+- São muito criativas!
+
+## Premiação
+
+Cada grupo receberá uma quantia de R$ 15,00 a cada 10 pontos conquistados! Por exemplo, se conquistarem 25 pontos, os participantes ganharão R$ 30,00 em conjunto. É simbólico, mas dá para conquistar muito mais! O prêmio máximo por equipe é limitado a R$ 150,00. 
+
+*Obs: a qualquer momento os organizadores podem optar por aumentarem o prêmio monetário, mas não podem diminuí-lo.
+
+Além disso, os três grupos com melhor pontuação receberam, além de prestígio, prêmios simbôlicos anunciados ao fim da competição.
+
+E o melhor prêmio será conquistado se todas as equipes juntas atingirem um total de 300 pontos, ou seja, um quinto de todos os desafios propostos. Convidaremos veteranos e fundadores do Jupiter para contar histórias da equipe e como a participação no Jupiter é um diferencial na vida de cada um!
 
 
 
