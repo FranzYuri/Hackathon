@@ -2279,12 +2279,13 @@ class Flight:
 
         return None
 
-    def plot3dTrajectory(self):
+    def plot3dTrajectory(self, filename=""):
         """Plot a 3D graph of the trajectory
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2323,14 +2324,18 @@ class Flight:
         ax1.view_init(15, 45)
         plt.show()
 
+        if filename:
+            fig1.savefig(filename)
+
         return None
 
-    def plotLinearKinematicsData(self):
+    def plotLinearKinematicsData(self, filename=""):
         """Prints out all Kinematics graphs available about the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2401,14 +2406,19 @@ class Flight:
 
         plt.subplots_adjust(hspace=0.5)
         plt.show()
+
+        if filename:
+            fig2.savefig(filename)
+        
         return None
 
-    def plotAttitudeData(self):
+    def plotAttitudeData(self, filename=""):
         """Prints out all Angular position graphs available about the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2468,15 +2478,19 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig3.savefig(filename)
+
         return None
 
-    def plotFlightPathAngleData(self):
+    def plotFlightPathAngleData(self, filename=""):
         """Prints out Flight path and Rocket Attitude angle graphs available
         about the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2523,15 +2537,19 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig5.savefig(filename)
+
         return None
 
-    def plotAngularKinematicsData(self):
+    def plotAngularKinematicsData(self, filename=""):
         """Prints out all Angular veolcity and acceleration graphs available
         about the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2608,14 +2626,20 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig4.savefig(filename)
+
         return None
 
-    def plotTrajectoryForceData(self):
+    def plotTrajectoryForceData(self, filenameRailButton="", filenameAerodynamic=""):
         """Prints out all Forces and Moments graphs available about the Flight
 
         Parameters
         ----------
-        None
+        filenameRailButton : string
+            Filename to save the rail button plots
+        filenameAerodynamic : string
+            Filename to save the aerodynamic plots
         
         Return
         ------
@@ -2679,6 +2703,9 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filenameRailButton:
+            fig6.savefig(filenameRailButton)
+
         # Aerodynamic force and moment plots
         fig7 = plt.figure(figsize=(9, 12))
 
@@ -2727,10 +2754,18 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filenameAerodynamic:
+            fig7.savefig(filenameAerodynamic)
+
         return None
 
-    def plotEnergyData(self):
+    def plotEnergyData(self, filename=""):
         """Prints out all Energy components graphs available about the Flight
+
+        Parameters
+        ----------
+        filename : string
+            Filename to save the plots
 
         Returns
         -------
@@ -2818,15 +2853,19 @@ class Flight:
         plt.subplots_adjust(hspace=1)
         plt.show()
 
+        if filename:
+            fig8.savefig(filename)
+
         return None
 
-    def plotFluidMechanicsData(self):
+    def plotFluidMechanicsData(self, filename=""):
         """Prints out a summary of the Fluid Mechanics graphs available about 
         the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2891,9 +2930,12 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig10.savefig(filename)
+
         return None
 
-    def calculateFinFlutterAnalysis(self, finThickness, shearModulus):
+    def calculateFinFlutterAnalysis(self, finThickness, shearModulus, filename=""):
         """ Calculate, create and plot the Fin Flutter velocity, based on the
         pressure profile provided by Atmosferic model selected. It considers the
         Flutter Boundary Equation that is based on a calculation published in
@@ -2909,6 +2951,8 @@ class Flight:
             The fin thickness, in meters
         shearModulus : float
             Shear Modulus of fins' material, must be given in Pascal
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -3039,15 +3083,19 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig12.savefig(filename)
+
         return None
 
-    def plotStabilityAndControlData(self):
+    def plotStabilityAndControlData(self, filename=""):
         """Prints out Rocket Stability and Control parameters graphs available 
         about the Flight
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -3106,9 +3154,12 @@ class Flight:
         plt.subplots_adjust(hspace=0.5)
         plt.show()
 
+        if filename:
+            fig9.savefig(filename)
+
         return None
 
-    def plotPressureSignals(self):
+    def plotPressureSignals(self, filenames=[""]):
         """ Prints out all Parachute Trigger Pressure Signals.
         This function can be called also for plot pressure data for flights
         without Parachutes, in this case the Pressure Signals will be simply
@@ -3121,18 +3172,27 @@ class Flight:
 
         Parameters
         ----------
-        None
+        filename : list, string
+            Filenames to save the plots (in the order they are plotted)
         
         Return
         ------
         None
         """
+        # Check input arguments
+        if any(filenames):
+            try:
+                if len(filenames) != 3*len(self.rocket.parachutes):
+                    raise Exception("Dimensions mismatch.")
+            except:
+                return None
+        
         # Post-process results
         if self.postProcessed is False:
             self.postProcess()
 
         if len(self.rocket.parachutes) == 0:
-            plt.figure()
+            fig = plt.figure()
             ax1 = plt.subplot(111)
             ax1.plot(self.z[:,0], self.env.pressure(self.z[:,1]))
             ax1.set_title("Pressure at Rocket's Altitude")
@@ -3143,12 +3203,29 @@ class Flight:
 
             plt.show()
 
+            if isinstance(filenames, str):
+                fig.savefig(filenames)
+            else:
+                fig.savefig(filenames[0])
+
+
         else:
-            for parachute in self.rocket.parachutes:
-                print('Parachute: ', parachute.name)
-                parachute.noiseSignalFunction()
-                parachute.noisyPressureSignalFunction()
-                parachute.cleanPressureSignalFunction()
+            if any(filenames):
+                i = 0
+                for parachute in self.rocket.parachutes:
+                    print('Parachute: ', parachute.name)
+
+                    parachute.noiseSignalFunction.plot(filename=filenames[3*i])
+                    parachute.noisyPressureSignalFunction.plot(filename=filenames[3*i+1])
+                    parachute.cleanPressureSignalFunction.plot(filename=filenames[3*i+2])
+                    i += 1
+            else:
+                for parachute in self.rocket.parachutes:
+                    print('Parachute: ', parachute.name)
+                    parachute.noiseSignalFunction.plot()
+                    parachute.noisyPressureSignalFunction.plot()
+                    parachute.cleanPressureSignalFunction.plot()
+
 
         return None
 
@@ -3203,17 +3280,28 @@ class Flight:
     
         return None
 
-    def allInfo(self):
+    def allInfo(self, filenames=[""]):
         """Prints out all data and graphs available about the Flight.
 
         Parameters
         ----------
-        None
+        filenames : list
+            Filenames of the plots
         
         Return
         ------
         None
         """
+        # Check input arguments
+        if any(filenames):
+            try:
+                # 10 is the number of plots in this function
+                if len(filenames) != 10:
+                    raise Exception("Dimensions mismatch.")
+            except:
+                print("Dimensions mismatch.")
+                return None
+
         # Post-process results
         if self.postProcessed is False:
             self.postProcess()
@@ -3233,32 +3321,61 @@ class Flight:
         print("\n\nNumerical Integration Information\n")
         self.printNumericalIntegrationSettings()
 
-        print("\n\nTrajectory 3d Plot\n")
-        self.plot3dTrajectory()
+        if any(filenames):
+            print("\n\nTrajectory 3d Plot\n")
+            self.plot3dTrajectory(filename=filenames[0])
 
-        print("\n\nTrajectory Kinematic Plots\n")
-        self.plotLinearKinematicsData()
-        
-        print("\n\nAngular Position Plots\n")
-        self.plotFlightPathAngleData()
-        
-        print("\n\nPath, Attitude and Lateral Attitude Angle plots\n")
-        self.plotAttitudeData()
-        
-        print("\n\nTrajectory Angular Velocity and Acceleration Plots\n")
-        self.plotAngularKinematicsData()
-        
-        print("\n\nTrajectory Force Plots\n")
-        self.plotTrajectoryForceData()
-        
-        print("\n\nTrajectory Energy Plots\n")
-        self.plotEnergyData()
-        
-        print("\n\nTrajectory Fluid Mechanics Plots\n")
-        self.plotFluidMechanicsData()
+            print("\n\nTrajectory Kinematic Plots\n")
+            self.plotLinearKinematicsData(filename=filenames[1])
+            
+            print("\n\nAngular Position Plots\n")
+            self.plotFlightPathAngleData(filename=filenames[2])
+            
+            print("\n\nPath, Attitude and Lateral Attitude Angle plots\n")
+            self.plotAttitudeData(filename=filenames[3])
+            
+            print("\n\nTrajectory Angular Velocity and Acceleration Plots\n")
+            self.plotAngularKinematicsData(filename=filenames[4])
+            
+            print("\n\nTrajectory Force Plots\n")
+            self.plotTrajectoryForceData(filenameRailButton=filenames[5],
+                                        filenameAerodynamic=filenames[6])
+            
+            print("\n\nTrajectory Energy Plots\n")
+            self.plotEnergyData(filename=filenames[7])
+            
+            print("\n\nTrajectory Fluid Mechanics Plots\n")
+            self.plotFluidMechanicsData(filename=filenames[8])
 
-        print("\n\nTrajectory Stability and Control Plots\n")
-        self.plotStabilityAndControlData()
+            print("\n\nTrajectory Stability and Control Plots\n")
+            self.plotStabilityAndControlData(filename=filenames[9])
+        else:
+            print("\n\nTrajectory 3d Plot\n")
+            self.plot3dTrajectory()
+
+            print("\n\nTrajectory Kinematic Plots\n")
+            self.plotLinearKinematicsData()
+            
+            print("\n\nAngular Position Plots\n")
+            self.plotFlightPathAngleData()
+            
+            print("\n\nPath, Attitude and Lateral Attitude Angle plots\n")
+            self.plotAttitudeData()
+            
+            print("\n\nTrajectory Angular Velocity and Acceleration Plots\n")
+            self.plotAngularKinematicsData()
+            
+            print("\n\nTrajectory Force Plots\n")
+            self.plotTrajectoryForceData()
+            
+            print("\n\nTrajectory Energy Plots\n")
+            self.plotEnergyData()
+            
+            print("\n\nTrajectory Fluid Mechanics Plots\n")
+            self.plotFluidMechanicsData()
+
+            print("\n\nTrajectory Stability and Control Plots\n")
+            self.plotStabilityAndControlData()
 
         return None
 

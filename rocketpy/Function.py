@@ -1010,6 +1010,7 @@ class Function:
         forceData=False,
         forcePoints=False,
         returnObject=False,
+        filename=""
     ):
         """ Plot 1-Dimensional Function, from a lower limit to an upper limit,
         by sampling the Function several times in the interval. The title of
@@ -1040,6 +1041,8 @@ class Function:
             Setting forcePoints to True will plot all points, as a scatter, in
             which the Function was evaluated in the dataset. Default value is
             False.
+        filename : string
+            Filename to save the plot
 
         Returns
         -------
@@ -1079,6 +1082,10 @@ class Function:
         plt.xlabel(self.__inputs__[0].title())
         plt.ylabel(self.__outputs__[0].title())
         plt.show()
+
+        if filename:
+            fig.savefig(filename)
+
         if returnObject:
             return fig, ax
 
@@ -1089,6 +1096,7 @@ class Function:
         samples=[30, 30],
         forceData=True,
         dispType="surface",
+        filename=""
     ):
         """ Plot 2-Dimensional Function, from a lower limit to an upper limit,
         by sampling the Function several times in the interval. The title of
@@ -1122,6 +1130,8 @@ class Function:
         dispType : string, optional
             Display type of plotted graph, which can be surface, wireframe,
             contour, or contourf. Default value is surface.
+        filename : string
+            Filename to save the plot
 
         Returns
         -------
@@ -1196,6 +1206,9 @@ class Function:
         axes.set_zlabel(self.__outputs__[0].title())
         plt.show()
 
+        if filename:
+            figure.savefig(filename)
+
     @staticmethod
     def comparePlots(
         plot_list,
@@ -1208,6 +1221,7 @@ class Function:
         forceData=False,
         forcePoints=False,
         returnObject=False,
+        filename=""
     ):
         """ Plots N 1-Dimensional Functions in the same plot, from a lower
         limit to an upper limit, by sampling the Functions several times in
@@ -1247,6 +1261,8 @@ class Function:
             Setting forcePoints to True will plot all points, as a scatter, in
             which the Function was evaluated to plot it. Default value is
             False.
+        filename : string
+            Filename to save the plots
 
         Returns
         -------
@@ -1331,6 +1347,9 @@ class Function:
 
         # Show plot
         plt.show()
+
+        if filename:
+            fig.savefig(filename)
 
         if returnObject:
             return fig, ax

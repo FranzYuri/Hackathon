@@ -2571,13 +2571,14 @@ class Environment:
 
         return None
 
-    def info(self):
+    def info(self, filename=""):
         """Prints most important data and graphs available about the
         Environment.
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -2643,7 +2644,7 @@ class Environment:
         grid = np.linspace(self.elevation, self.maxExpectedHeight)
 
         # Create figure
-        plt.figure(figsize=(9, 4.5))
+        fig = plt.figure(figsize=(9, 4.5))
 
         # Create wind speed and wind direction subplot
         ax1 = plt.subplot(121)
@@ -2687,12 +2688,18 @@ class Environment:
         plt.subplots_adjust(wspace=0.5)
         plt.show()
 
-    def allInfo(self):
+        if filename:
+            fig.savefig(filename)
+
+    def allInfo(self, filenameAtm="", filenameGeneric=""):
         """Prints out all data and graphs available about the Environment.
 
         Parameters
         ----------
-        None
+        filenameAtm : string
+            Filename to save the atmospheric plots
+        filenameGeneric : string
+            Filename to save the other plots
         
         Return
         ------
@@ -2762,7 +2769,7 @@ class Environment:
         grid = np.linspace(self.elevation, self.maxExpectedHeight)
 
         # Create figure
-        plt.figure(figsize=(9, 9))
+        fig1 = plt.figure(figsize=(9, 9))
 
         # Create wind speed and wind direction subplot
         ax1 = plt.subplot(221)
@@ -2834,6 +2841,9 @@ class Environment:
         plt.subplots_adjust(wspace=0.5, hspace=0.3)
         plt.show()
 
+        if filenameAtm:
+            fig1.savefig(filenameAtm)
+
         # Plot ensemble member comparison
         if self.atmosphericModelType != "Ensemble":
             return None
@@ -2842,7 +2852,7 @@ class Environment:
         currentMember = self.ensembleMember
 
         # Create figure
-        plt.figure(figsize=(9, 13.5))
+        fig2 = plt.figure(figsize=(9, 13.5))
 
         # Create wind u subplot
         ax5 = plt.subplot(321)
@@ -2913,6 +2923,9 @@ class Environment:
         # Display plot
         plt.subplots_adjust(wspace=0.5, hspace=0.3)
         plt.show()
+
+        if filenameGeneric:
+            fig2.savefig(filenameGeneric)
 
         # Clean up
         self.selectEnsembleMember(currentMember)

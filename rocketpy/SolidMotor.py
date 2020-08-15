@@ -701,13 +701,14 @@ class SolidMotor:
 
         return None
 
-    def info(self):
+    def info(self, filename=""):
         """Prints out a summary of the data and graphs available about
         the Motor.
 
         Parameters
         ----------
-        None
+        filename : string
+            Filename to save the plots
         
         Return
         ------
@@ -738,21 +739,31 @@ class SolidMotor:
 
         # Show plots
         print("\nPlots")
-        self.thrust()
+        self.thrust.plot(filename=filename)
 
         return None
 
-    def allInfo(self):
+    def allInfo(self, filenames=[""]):
         """Prints out all data and graphs available about the Motor.
 
         Parameters
         ----------
-        None
+        filename : list
+            Filenames to save the plots
         
         Return
         ------
         None
         """
+        # Check input arguments
+        if any(filenames):
+            try:
+                # 12 is the number of plots in this function
+                if len(filenames) != 12:
+                    raise Exception("Dimensions mismatch.")
+            except:
+                return None
+
         # Print nozzle details
         print("Nozzle Details")
         print("Nozzle Radius: " + str(self.nozzleRadius) + " m")
@@ -794,18 +805,18 @@ class SolidMotor:
 
         # Show plots
         print("\nPlots")
-        self.thrust()
-        self.mass()
-        self.massDot()
-        self.grainInnerRadius()
-        self.grainHeight()
-        self.burnRate()
-        self.burnArea()
-        self.Kn()
-        self.inertiaI()
-        self.inertiaIDot()
-        self.inertiaZ()
-        self.inertiaZDot()
+        self.thrust.plot(filename=filenames[0])
+        self.mass.plot(filename=filenames[1])
+        self.massDot.plot(filename=filenames[2])
+        self.grainInnerRadius.plot(filename=filenames[3])
+        self.grainHeight.plot(filename=filenames[4])
+        self.burnRate.plot(filename=filenames[5])
+        self.burnArea.plot(filename=filenames[6])
+        self.Kn.plot(filename=filenames[7])
+        self.inertiaI.plot(filename=filenames[8])
+        self.inertiaIDot.plot(filename=filenames[9])
+        self.inertiaZ.plot(filename=filenames[10])
+        self.inertiaZDot.plot(filename=filenames[11])
 
         return None
 
