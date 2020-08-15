@@ -256,4 +256,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## Acknowledgments
 
-**_Still working on this!_**
+I want to thank all of the members of Projeto Jupiter, both those who helped with the coding and the ones who supported and 
+encouraged me through all this proccess. Without them maybe this idea would never exist, and I cannot express how much I 
+apprecciate the learning opportunities this project offered me.
+
+Also I would like to thank all those from the GitHub community who spotted this idea, praised it and supported with coding, 
+knowledgement and new ways of thinking.
