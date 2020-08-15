@@ -3203,6 +3203,46 @@ class Flight:
     
         return None
 
+    def Apogee_By_RocketMass(self,mass_small,mass_big,NumPoints):
+            """Takes a minimum and a maximum value of mass and calculates the apogee
+            for various values in beetwen. It thens creates and prints a graph where
+            the masses are shown in the x axis and the apogees in the y axis.
+            
+            Parameters
+            ----------
+            mass_small : float
+                smallest value of mass of which the apogee will be calculated
+            mass_big : float
+                biggest value of mass of which the apogee will be calculated
+            NumPoints : int
+                number of points tha will be ploted
+            """
+            OriginalMass = self.rocket.mass 
+            def apogee(mass):
+                mass_total = mass
+                mass_propellant = self.rocket.motor.propellantInitialMass
+                mass_unloaded = mass_total - mass_propellant
+                self.rocket.mass = mass_unloaded
+                TF = Flight(self.rocket,
+                            self.env,
+                            inclination=80,
+                            heading=90,
+                            initialSolution=None,
+                            terminateOnApogee=True,
+                            maxTime=600,
+                            maxTimeStep=np.inf,
+                            minTimeStep=0,
+                            rtol=1e-6,
+                            atol=6 * [1e-3] + 4 * [1e-6] + 3 * [1e-3],
+                            timeOvershoot=True,
+                            verbose=False,
+                            )
+                return TF.apogee - self.env.elevation
+            apogeebymass = Function(apogee, inputs="Mass (kg) - with propellant", outputs="Estimated Apogee AGL (m)")
+            apogeebymass.plot(mass_small,mass_big,NumPoints)
+            self.rocket.mass = OriginalMass
+            return None
+
     def allInfo(self):
         """Prints out all data and graphs available about the Flight.
 
