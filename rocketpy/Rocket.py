@@ -513,7 +513,8 @@ class Rocket:
             of the rocket in the section of the fins, as this impacts
             its lift coefficient.
         delta : float, optional
-            Fins medium angle of deflection. It is 0 by default.
+            Fins medium angle of deflection. It is 0 by default. Accepts only 
+            trapezoidal fins. If not, please set delta=0.
         -------
         self : Rocket
             Object of the Rocket class.
@@ -948,23 +949,24 @@ class Rocket:
     # Variables
     railButtonPair = namedtuple("railButtonPair", "distanceToCM angularPosition")
 
-    def calculate_roll_moment(self, V, a, n, delta, omega):
+    def calculate_roll_moment(self, V, a, omega):
         """Calculates the resultant roll moment. Roll forcing and roll damping
-        are calculates separately before being added. 
+        are calculates separately before being added. Accepts only trapezoidal
+        fins. If not, please set delta=0.
 
         Parameters
         ----------
         V : float
-            Free-stream velocity
+            Free-stream velocity.
         a : float
-            Speed of sound
+            Speed of sound.
         n : int
-            Number of fins
+            Number of fins.
         delta : float
-            Fins medium angle of deflection in radians 
+            Fins medium angle of deflection in radians.
         omega : float
             Rocket's angular velocity Omega 3. Direction 3 is in the rocket's 
-            body axis and points in the direction of cylindrical symmetry
+            body axis and points in the direction of cylindrical symmetry.
         
         Returns
         -------
@@ -976,8 +978,7 @@ class Rocket:
         
         Af = (self.rootChord + self.tipChord) * self.span / 2; # fin area
         AR= 2 * (self.span**2) / Af
-        #beta = np.sqrt( np.abs(1 - ((V/a)**2) ) )
-        beta = 0.5
+        beta = np.sqrt( np.abs(1 - ((V/a)**2) ) )
         gamac = np.arctan( (self.rootChord - self.tipChord) / (2 * self.span) ) # mid chord angle
         yparcial = (self.rootChord + 2 * self.tipChord) / (self.rootChord + self.tipChord) #mean aerodynamic chord distance
         Y = self.radius + (self.span/3) * yparcial #mean aerodynamic chord distance with the radius added
@@ -985,15 +986,15 @@ class Rocket:
         Cnalfa1 = ( 2 * np.pi * AR * (Af / self.area) ) / (2 + np.sqrt( 4 + ( (beta * AR / (np.cos(gamac)) )**2 ) ) )
 
         # roll forcing moment coefficient derivative
-        Clfdelta = n * Cnalfa1 * Y / (2 * self.radius)
-        Clf = Clfdelta * delta
+        Clfdelta = self.n * Cnalfa1 * Y / (2 * self.radius)
+        Clf = Clfdelta * self.delta
 
-        #roll damping moment coefficient derivative (falta fazer: *omega*cos(delta)/v0)
+        #pre calculations for trapezoidal fins
         c1 = ((self.rootChord+self.tipChord) /  2) * (self.radius**2) * self.span
         c2 = ((self.rootChord + 2 * self.tipChord) / 3) * self.radius * (self.span**2)
         c3 = ((self.rootChord + 3 * self.tipChord) / 12) * (self.span**3);
 
-        Cldomega = (n * Cnalfa0  * (c1 + c2 + c3)) * np.cos(delta) / (self.area * (2 * self.radius)) 
+        Cldomega = (self.n * Cnalfa0  * (c1 + c2 + c3)) * np.cos(self.delta) / (self.area * (2 * self.radius)) 
         Cld = Cldomega * omega/ V
 
         return Clf - Cld 
