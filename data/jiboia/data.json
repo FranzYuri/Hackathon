@@ -2,7 +2,7 @@
   "burnOut": 2.84,
   "reshapeThrustCurve": false,
   "grainNumber": 5,
-  "grainSeparation": 0.005,
+  "grainSeparation": 0.006,
   "grainOuterRadius": 0.02105,
   "grainInitialInnerRadius": 0.00963,
   "grainInitialHeight": 0.11838,
