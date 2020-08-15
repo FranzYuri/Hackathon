@@ -479,6 +479,10 @@ class Rocket:
         # Store values
         nose = [(0, 0, cpz), clalpha, "Nose Cone"]
         self.aerodynamicSurfaces.append(nose)
+        self.distanceNoseCM = distanceToCM
+        self.cone_k = k
+        self.kind = kind
+        self.cone_length = length
 
         # Refresh static margin calculation
         self.evaluateStaticMargin()
@@ -904,6 +908,76 @@ class Rocket:
 
         # Return None
         return None
+    
+    def drawRocket(self):
+        """Plots a graph of the rocket"""
+        CMtoCone = self.distanceNoseCM
+        CMtonozzle = self.distanceRocketNozzle
+        CMtofin = self.distanceRocketFins
+        radius = self.radius
+
+        tube_length = self.distanceNoseCM + abs(self.distanceRocketNozzle)
+
+        #Figure characteristics
+        fig = plt.figure(figsize = (7,4))
+        plt.axes().set_aspect('equal')
+
+        plt.xlim(-0.2,3)
+        plt.ylim(-2*(radius+self.span),2*(radius+self.span))
+        plt.xlabel("x [meters]")
+        plt.ylabel("y or z [meters]")
+        plt.title("Rocket dimensions")
+        plt.grid(True)
+        
+
+        ## Main tube of the rocket
+        plt.plot([0,0,tube_length,tube_length,0], [radius,-radius,-radius, radius, radius], color = "black")
+
+        ## Adding fins
+        finx = [abs(CMtonozzle)+CMtofin, abs(CMtonozzle)+CMtofin+self.tipChord, abs(CMtonozzle)+CMtofin+self.rootChord, abs(CMtonozzle)+CMtofin, abs(CMtonozzle)+CMtofin]
+        finy = [self.span+radius, self.span+radius, radius, radius, self.span+radius]
+        fin_negative_y = [i*(-1) for i in finy]
+        plt.plot(finx, finy, color = "black")
+        plt.plot(finx, fin_negative_y, color = "black")
+        
+        ## Adding cone
+        if self.kind == "vonKarman":
+            cone_x = []
+            cone_theta = []
+            cone_y = []
+            n = int(50)
+            for aux in range(n):
+                cone_x.insert(aux, self.cone_length*(aux/(n-1)))
+                cone_theta.insert(  aux, np.arccos(1-(2*cone_x[aux]/self.cone_length) ) ) # result in radians
+                cone_x[aux] *= (-1)
+                cone_x[aux] += tube_length + self.cone_length
+                cone_y.insert(aux ,radius*np.sqrt(cone_theta[aux] - (np.sin(2*cone_theta[aux])/2)) / (np.sqrt(np.pi)) )
+            cone_negative_y = [i*(-1) for i in cone_y]
+            plt.plot(cone_x,cone_y, color = "black")
+            plt.plot(cone_x,cone_negative_y, color = "black")
+        if self.kind == "conical":
+            plt.plot([tube_length,tube_length,tube_length+self.cone_length,tube_length],[radius,-radius,0,radius], color = "black")
+        
+        ## Centers of mass and pressure
+        # center of mass of the rocket unloaded
+        plt.scatter(abs(CMtonozzle), 0, color = "darkblue")
+
+        # cone center of pressure
+        plt.scatter(tube_length+self.cone_k*self.cone_length,0, color = "darkblue")
+
+        # Center of mass of the propellant
+        plt.scatter(abs(CMtonozzle)-self.distanceRocketPropellant, 0, color = "darkblue") 
+
+        # Center of mass of the fully loaded rocket
+        #plt.scatter(abs(CMtonozzle)-self.centerOfMass,0, color = "red")
+
+        plt.show()
+        plt.savefig("RocketGeometry.png")
+
+
+
+
+
 
     def addFin(
         self,
