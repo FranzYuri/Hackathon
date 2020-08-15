@@ -11,7 +11,6 @@ import math
 import bisect
 import warnings
 import time
-from pathlib import Path
 from datetime import datetime, timedelta
 from inspect import signature, getsourcelines
 from collections import namedtuple
