@@ -5,10 +5,13 @@ __copyright__ = "Copyright 20XX, Projeto Jupiter"
 __license__ = "MIT"
 
 import re
+import os
+import json
 import math
 import bisect
 import warnings
 import time
+from pathlib import Path
 from datetime import datetime, timedelta
 from inspect import signature, getsourcelines
 from collections import namedtuple
@@ -263,6 +266,28 @@ class SolidMotor:
         self.evaluateMass()
         self.evaluateGeometry()
         self.evaluateInertia()
+
+    @classmethod
+    def solid_motor_parser(cls, name):
+        """Returns a pre registered motor, currently
+        we have those motors registered:
+        - Jiboia
+        - Keron
+        - Mandioca
+
+        Parameters
+        -------
+        name: str
+            Name of the motor desired
+
+        Returns
+        -------
+        Motor Instance
+        """
+        data_path = f'{Path(os.path.dirname(os.path.abspath(__file__))).parent}/data/{name}/data.json'
+        thrust_source_path = f'{Path(os.path.dirname(os.path.abspath(__file__))).parent}/data/{name}/thrustCurve.csv'
+        data = json.loads(open(data_path).read())
+        return SolidMotor(thrust_source_path, **data)
 
     def reshapeThrustCurve(
         self, burnTime, totalImpulse, oldTotalImpulse=None, startAtZero=True
