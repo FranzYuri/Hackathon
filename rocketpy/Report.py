@@ -32,10 +32,31 @@ class Report:
     @property
     @abstractmethod
     def plots(self):
+        """Returns all the plots callable functions. Must
+        be implemented in child class
+
+        Parameters
+        ------
+        None
+
+        Return
+        ------
+        List[callable]
+        """
         raise NotImplementedError
 
     @abstractmethod
     def __json__(self):
+        """Function in which the child class must return all the relevant info.
+
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        Dict[str, Any]
+        """
         raise NotImplementedError
 
     def report_section(self, doc):
