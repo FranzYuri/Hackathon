@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from pylatex import Document, Subsection, Section, Figure, NoEscape, Itemize, NewPage, LineBreak
 
 from .Function import Function
 
@@ -741,6 +742,50 @@ class SolidMotor:
         self.thrust()
 
         return None
+
+    def report_section(self, doc):
+        with doc.create(Section('Motor')):
+            self.allInfo()
+            data = self.__json__()
+            with doc.create(Itemize()) as itemize:
+                for key, item in data.items():
+                    itemize.add_item(f"{key} : {item}")
+            for curve_plot in self.data_plots():
+                with doc.create(Figure(position='htbp')) as plot:
+                    plot.add_plot(width=300, dpi=150)
+                    plt.clf()
+                    doc.append(LineBreak())
+
+        doc.append(NewPage())
+        return doc
+
+    def data_plots(self):
+        plots = [self.thrust, self.mass, self.massDot, self.grainInnerRadius, self.grainHeight, self.burnRate,
+                 self.burnArea, self.Kn, self.inertiaI, self.inertiaIDot, self.inertiaZ, self.inertiaZDot]
+        for curve_plot in plots:
+            curve_plot()
+            yield
+
+    def __json__(self):
+        data = {
+            "Nozzle Radius": str(self.nozzleRadius) + " m",
+            "Nozzle Throat Radius": str(self.throatRadius) + " m",
+            "Number of Grains": str(self.grainNumber),
+            "Grain Spacing": str(self.grainSeparation) + " m",
+            "Grain Density": str(self.grainDensity) + " kg/m3",
+            "Grain Outer Radius": str(self.grainOuterRadius) + " m",
+            "Grain Inner Radius": str(self.grainInitialInnerRadius) + " m",
+            "Grain Height": str(self.grainInitialHeight) + " m",
+            "Grain Volume": "{:.3f}".format(self.grainInitialVolume) + " m3",
+            "Grain Mass": "{:.3f}".format(self.grainInitialMass) + " kg",
+            "Total Burning Time": str(self.burnOutTime) + " s",
+            "Total Propellant Mass": "{:.3f}".format(self.propellantInitialMass)+ " kg",
+            "Propellant Exhaust Velocity": "{:.3f}".format(self.exhaustVelocity) + " m/s",
+            "Average Thrust": "{:.3f}".format(self.averageThrust) + " N",
+            "Maximum Thrust": str(self.maxThrust) + " N at "+ str(self.maxThrustTime) + " s after ignition.",
+            "Total Impulse": "{:.3f}".format(self.totalImpulse) + " Ns"
+        }
+        return data
 
     def allInfo(self):
         """Prints out all data and graphs available about the Motor.

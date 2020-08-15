@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from pylatex import Document, Subsection, Section, Figure, NoEscape, Itemize, NewPage
 import requests
 
 try:
@@ -2686,6 +2687,40 @@ class Environment:
 
         plt.subplots_adjust(wspace=0.5)
         plt.show()
+
+    def report_section(self, doc):
+        with doc.create(Section('Environment')):
+            self.allInfo()
+            data = self.__json__()
+            with doc.create(Itemize()) as itemize:
+                for key, item in data.items():
+                    itemize.add_item(f"{key} : {item}")
+            with doc.create(Figure(position='htbp')) as plot:
+                plot.add_plot(width=NoEscape(r'1\textwidth'), dpi=150)
+                plot.add_caption('Environmental data.')
+            plt.clf()
+        doc.append(NewPage())
+        return doc
+
+    def __json__(self):
+        data = {
+            'Acceleration of Gravity(m/s²)': str(self.g),
+            'Launch Rail Length': self.rL,
+            'Launch Date': self.date,
+            'Launch Site Latitude': self.lat,
+            'Launch Site Longitude': self.lon,
+            'Launch Site Surface Elevation': self.elevation,
+            'Surface Wind Speed': self.windSpeed(self.elevation),
+            'Surface Wind Direction': self.windDirection(self.elevation),
+            'Surface Wind Heading': self.windHeading(self.elevation),
+            'Surface Pressure': self.pressure(self.elevation)/100,
+            'Surface Temperature': self.temperature(self.elevation),
+            'Surface Air Density': self.density(self.elevation),
+            'Surface Speed of Sound': self.speedOfSound(self.elevation),
+            #'Atmospheric Model Type': self.atmosphericModelType,
+            #'Maximum Height(km)': self.maxExpectedHeight / 1000,
+        }
+        return data
 
     def allInfo(self):
         """Prints out all data and graphs available about the Environment.

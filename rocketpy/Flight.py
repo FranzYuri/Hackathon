@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from pylatex import Document, Section, Figure, Itemize, NewPage, LineBreak
 
 from .Function import Function
 
@@ -2218,7 +2219,6 @@ class Flight:
         )
         return None
 
-
     def printNumericalIntegrationSettings(self):
         """Prints out the Numerical Integration settings
 
@@ -3261,6 +3261,130 @@ class Flight:
         self.plotStabilityAndControlData()
 
         return None
+
+    def __json__(self):
+
+        data = {
+            "Frontal Surface Wind Speed": "{:.2f} m/s".format(self.frontalSurfaceWind),
+            "Lateral Surface Wind Speed": "{:.2f} m/s".format(self.lateralSurfaceWind),
+            "Rail Departure Time": "{:.3f} s".format(self.outOfRailTime),
+            "Rail Departure Velocity": "{:.3f} m/s".format(self.outOfRailVelocity),
+            "Rail Departure Static Margin": "{:.3f} c".format(self.staticMargin(self.outOfRailTime)),
+            "Rail Departure Angle of Attack": "{:.3f}°".format(self.angleOfAttack(self.outOfRailTime)),
+            "Rail Departure Thrust-Weight Ratio": "{:.3f}".format(self.rocket.thrustToWeight(self.outOfRailTime)),
+            "Rail Departure Reynolds Number": "{:.3e}".format(self.ReynoldsNumber(self.outOfRailTime)),
+            "BurnOut time": "{:.3f} s".format(self.rocket.motor.burnOutTime),
+            "Altitude at burnOut": "{:.3f} m (AGL)".format(self.z( self.rocket.motor.burnOutTime ) - self.env.elevation),
+            "Rocket velocity at burnOut": "{:.3f} m/s".format(self.speed( self.rocket.motor.burnOutTime )),
+            "Freestream velocity at burnOut": "{:.3f} m/s".format(
+                    (self.streamVelocityX( self.rocket.motor.burnOutTime )**2 +
+                    self.streamVelocityY( self.rocket.motor.burnOutTime )**2 +
+                    self.streamVelocityZ( self.rocket.motor.burnOutTime )**2)**0.5
+                ),
+            "Mach Number at burnOut": "{:.3f}".format(self.MachNumber( self.rocket.motor.burnOutTime)),
+            "Kinetic energy at burnOut": "{:.3e} J".format(self.kineticEnergy(self.rocket.motor.burnOutTime)),
+            "Apogee Altitude": "{:.3f} m (ASL) | {:.3f} m (AGL)".format(
+                    self.apogee, self.apogee - self.env.elevation
+                ),
+            "Apogee Time": "{:.3f} s".format(self.apogeeTime),
+            "Apogee Freestream Speed": "{:.3f} m/s".format(self.apogeeFreestreamSpeed),
+            "Maximum Speed": "{:.3f} m/s at {:.2f} s".format(
+                    self.maxSpeed, self.maxSpeedTime
+                ),
+            "Maximum Mach Number": "{:.3f} Mach at {:.2f} s".format(
+                    self.maxMachNumber, self.maxMachNumberTime
+                ),
+            "Maximum Reynolds Number": "{:.3e} at {:.2f} s".format(
+                    self.maxReynoldsNumber, self.maxReynoldsNumberTime
+                ),
+            "Maximum Dynamic Pressure": "{:.3e} Pa at {:.2f} s".format(
+                    self.maxDynamicPressure, self.maxDynamicPressureTime
+                ),
+            "Maximum Acceleration": "{:.3f} m/s² at {:.2f} s".format(
+                    self.maxAcceleration, self.maxAccelerationTime
+                ),
+            "Maximum Gs": "{:.3f} g at {:.2f} s".format(
+                    self.maxAcceleration / self.env.g, self.maxAccelerationTime
+                ),
+            "Maximum Upper Rail Button Normal Force": "{:.3f} N".format(
+                    self.maxRailButton1NormalForce
+                ),
+            "Maximum Upper Rail Button Shear Force": "{:.3f} N".format(
+                    self.maxRailButton1ShearForce
+                ),
+            "Maximum Lower Rail Button Normal Force": "{:.3f} N".format(
+                    self.maxRailButton2NormalForce
+                ),
+            "Maximum Lower Rail Button Shear Force": "{:.3f} N".format(
+                    self.maxRailButton2ShearForce
+                )
+        }
+
+        if len(self.impactState) != 0:
+            data.update({"X Impact": "{:.3f} m".format(self.xImpact)})
+            data.update({"Y Impact": "{:.3f} m".format(self.yImpact)})
+            data.update({"Time of Impact": "{:.3f} s".format(self.tFinal)})
+            data.update({"Velocity at Impact": "{:.3f} m/s".format(self.impactVelocity)})
+        elif self.terminateOnApogee is False:
+            data.update({"Time": "{:.3f} s".format(self.solution[-1][0])})
+            data.update({"Altitude": "{:.3f} m".format(self.solution[-1][3])})
+
+        if len(self.parachuteEvents) == 0:
+            print("No Parachute Events Were Triggered.")
+            for event in self.parachuteEvents:
+                triggerTime = event[0]
+                parachute = event[1]
+                openTime = triggerTime + parachute.lag
+                velocity = self.freestreamSpeed(openTime)
+                altitude = self.z(openTime)
+                name = parachute.name.title()
+                data.update({name + " Ejection Triggered at": "{:.3f} s".format(triggerTime)})
+                data.update({name + " Parachute Inflated at": "{:.3f} s".format(openTime)})
+                data.update({name + " Parachute Inflated with Freestream Speed of": "{:.3f} m/s".format(velocity)})
+                data.update({name + " Parachute Inflated at Height of": "{:.3f} m (AGL)".format(altitude - self.env.elevation)})
+
+        return data
+
+    def data_plots(self):
+        plots = [self.plot3dTrajectory, self.plotLinearKinematicsData, self.plotFlightPathAngleData,
+                 self.plotAttitudeData, self.plotAngularKinematicsData, self.plotTrajectoryForceData,
+                 self.plotEnergyData, self.plotFluidMechanicsData, self.plotStabilityAndControlData]
+
+        for curve_plot in plots:
+            curve_plot()
+            yield
+
+    def report_section(self, doc):
+        with doc.create(Section('Rocket')):
+            self.allInfo()
+            data = self.__json__()
+            with doc.create(Itemize()) as itemize:
+                for key, item in data.items():
+                    itemize.add_item(f"{key} : {item}")
+            for curve_plot in self.data_plots():
+                with doc.create(Figure(position='htbp')) as plot:
+                    plot.add_plot(width=NoEscape(r'1\textwidth'), dpi=150)
+                    plt.clf()
+                    doc.append(LineBreak())
+
+        doc.append(NewPage())
+        return doc
+
+    def report(self):
+        # matplotlib.use('Agg')  # Not to use X server. For TravisCI.
+        if self.postProcessed is False:
+            self.postProcess()
+
+        geometry_options = {"right": "2cm", "left": "2cm"}
+        doc = Document('matplotlib_ex-dpi', geometry_options=geometry_options)
+        doc = self.env.report_section(doc)
+        doc = self.rocket.motor.report_section(doc)
+        doc = self.rocket.report_section(doc)
+        doc = self.report_section(doc)
+        doc.append('Conclusion.')
+
+        doc.generate_pdf(clean_tex=False)
+        # matplotlib.use('TkAgg')
 
     def animate(self, start=0, stop=None, fps=12, speed=4, elev=None, azim=None):
         """Plays an animation of the flight. Not implemented yet. Only

@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from pylatex import Section, Figure, Itemize, NewPage, LineBreak
 
 from .Function import Function
 
@@ -799,6 +800,60 @@ class Rocket:
 
         # Return None
         return None
+
+    def report_section(self, doc):
+        with doc.create(Section('Rocket')):
+            self.allInfo()
+            data = self.__json__()
+            with doc.create(Itemize()) as itemize:
+                for key, item in data.items():
+                    itemize.add_item(f"{key} : {item}")
+            for curve_plot in self.data_plots():
+                with doc.create(Figure(position='htbp')) as plot:
+                    plot.add_plot(width=300, dpi=300)
+                    plt.clf()
+                    doc.append(LineBreak())
+
+        doc.append(NewPage())
+        return doc
+
+    def data_plots(self):
+        plots = [self.totalMass, self.reducedMass, self.staticMargin, self.powerOnDrag,
+                 self.powerOffDrag]
+        for curve_plot in plots:
+            curve_plot()
+            yield
+
+        self.thrustToWeight.plot(lower=0, upper=self.motor.burnOutTime)
+
+    def __json__(self):
+
+        data = {
+            "Rocket Mass (No Propellant)" : "{:.3f} kg ".format(self.mass),
+            "Rocket Mass (With Propellant)": "{:.3f} kg ".format(self.totalMass(0)),
+            "Rocket Inertia I": "{:.3f} kg*m2".format(self.inertiaI),
+            "Rocket Inertia Z": "{:.3f} kg*m2".format(self.inertiaZ),
+            "Rocket Maximum Radius": str(self.radius) + "m",
+            "Rocket Frontal Area": "{:.6f}".format(self.area) + " m2",
+            "Rocket Center of Mass - Nozzle Exit Distance": str(self.distanceRocketNozzle) + " m",
+            "Rocket Center of Mass - Propellant Center of Mass Distance": str(self.distanceRocketPropellant)+ " m",
+            "Rocket Center of Mass - Rocket Loaded Center of Mass": "{:.3f}".format(self.centerOfMass(0)) + " m",
+            "Distance - Center of Pressure to CM": "{:.3f}".format(self.cpPosition) + " m",
+            "Initial Static Margin":  "{:.3f}".format(self.staticMargin(0)) + " c",
+            "Final Static Margin": "{:.3f}".format(self.staticMargin(self.motor.burnOutTime)) + " c",
+        }
+
+        for aerodynamicSurface in self.aerodynamicSurfaces:
+            name = aerodynamicSurface[-1]
+            clalpha = aerodynamicSurface[1]
+            data.update({f"Lift Coefficient Derivative {name}": "{:.3f}".format(clalpha) + "/rad"})
+
+        for aerodynamicSurface in self.aerodynamicSurfaces:
+            name = aerodynamicSurface[-1]
+            cpz = aerodynamicSurface[0][2]
+            data.update({f"Center of Pressure to CM {name}": "{:.3f}".format(cpz) + "m"})
+
+        return data
 
     def allInfo(self):
         """Prints out all data and graphs available about the Rocket.
