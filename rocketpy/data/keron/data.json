@@ -1,0 +1,13 @@
+{
+  "burnOut": 5.3,
+  "reshapeThrustCurve": false,
+  "grainNumber": 6,
+  "grainSeparation": 0.0006,
+  "grainOuterRadius": 0.0214,
+  "grainInitialInnerRadius": 0.00965,
+  "grainInitialHeight": 0.0120,
+  "grainDensity": 1707,
+  "nozzleRadius": 0.021642,
+  "throatRadius": 0.008,
+  "interpolationMethod": "linear"
+}

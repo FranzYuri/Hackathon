@@ -4,9 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="rocketpyalpha", 
+    name="rocketpyalpha",
     version="0.9.5",
-    install_requires = [
+    install_requires=[
         'numpy>=1.0',
         'scipy>=1.0',
         'matplotlib>=3.0',
@@ -19,6 +19,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/giovaniceotto/RocketPy",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

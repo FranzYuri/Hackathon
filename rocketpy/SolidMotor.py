@@ -284,8 +284,8 @@ class SolidMotor:
         -------
         Motor Instance
         """
-        data_path = f'{Path(os.path.dirname(os.path.abspath(__file__))).parent}/data/{name}/data.json'
-        thrust_source_path = f'{Path(os.path.dirname(os.path.abspath(__file__))).parent}/data/{name}/thrustCurve.csv'
+        data_path = f'{os.path.dirname(os.path.abspath(__file__))}/data/{name}/data.json'
+        thrust_source_path = f'{os.path.dirname(os.path.abspath(__file__))}/data/{name}/thrustCurve.csv'
         data = json.loads(open(data_path).read())
         return SolidMotor(thrust_source_path, **data)
 
