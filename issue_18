@@ -1,7 +1,0 @@
-RocketPy is a Python library created by Projeto Jupiter. Its goal is to simulate high-power rocketry trajectories given a range of variables. The team pondered it would be in it’s best interest to create its own Python library tailored to its simulations needs. That is the context in which RocketPy was fashioned.
-
-The code allows the user to input its rockets data, such as motor details, aerodynamic structures, parachutes and so on. As well as weather condition and geolocation information, which can be imported from data available online. The output of RocketPy are a range of plots for you to analyze and improve your rocket’s design based on the given data.
-
-Such tool will allow Projeto Jupiter to improve their measurements and tests, refining their rockets towards rocketry excellence and more awards in future competitions.
-
-Further information about RocketPy can be found at https://github.com/Projeto-Jupiter/RocketPy
