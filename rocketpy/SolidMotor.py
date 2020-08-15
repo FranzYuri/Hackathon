@@ -268,7 +268,7 @@ class SolidMotor:
         self.evaluateInertia()
 
     @classmethod
-    def solid_motor_parser(cls, name):
+    def solidMotorParser(cls, name):
         """Returns a pre registered motor, currently
         we have those motors registered:
         - Jiboia
