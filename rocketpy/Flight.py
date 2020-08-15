@@ -3371,7 +3371,7 @@ class Flight(Report):
         doc = self.rocket.motor.report_section(doc)
         doc = self.rocket.report_section(doc)
         doc = self.report_section(doc)
-        doc.generate_pdf(clean_tex=False)
+        doc.generate_pdf(clean_tex=True)
         matplotlib.use(standard_backend) # Returning to the standard backend
 
     def animate(self, start=0, stop=None, fps=12, speed=4, elev=None, azim=None):

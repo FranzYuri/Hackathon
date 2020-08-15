@@ -86,5 +86,5 @@ class Report:
         doc = Document(path, geometry_options=geometry_options)
         doc = self.report_section(doc)
 
-        doc.generate_pdf(clean_tex=False)
+        doc.generate_pdf(clean_tex=True)
         matplotlib.use(standard_backend)
