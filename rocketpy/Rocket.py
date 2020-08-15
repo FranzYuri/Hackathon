@@ -514,7 +514,7 @@ class Rocket:
             its lift coefficient.
         airfoil : float, optional
             Select airfoil type. If False, which is default, use flat fins
-            configuration. Else, enter the clalpha value.
+            configuration. Else, enter the clalpha value, in rad^-1.
         Returns
         -------
         self : Rocket
