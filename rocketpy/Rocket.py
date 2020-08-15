@@ -486,7 +486,7 @@ class Rocket:
         # Return self
         return self.aerodynamicSurfaces[-1]
 
-    def addFins(self, n, span, rootChord, tipChord, distanceToCM, radius=0, airfoil=[False]):
+    def addFins(self, n, span, rootChord, tipChord, distanceToCM, radius=0, airfoil=None):
         """Create a fin set, storing its parameters as part of the
         aerodynamicSurfaces list. Its parameters are the axial position
         along the rocket and its derivative of the coefficient of lift
@@ -512,10 +512,9 @@ class Rocket:
             is default, use rocket radius. Otherwise, enter the radius
             of the rocket in the section of the fins, as this impacts
             its lift coefficient.
-        airfoil : list, bool, float, optional
+        airfoil : float, optional
             Select airfoil type. If False, which is default, use flat fins
-            configuration. If first argument is True, in the second argument
-            clalpha should be inserted.
+            configuration. Else, enter the clalpha value.
         Returns
         -------
         self : Rocket
@@ -550,7 +549,7 @@ class Rocket:
             )
 
         #flat fins configuration
-        if not airfoil[0]:
+        if not airfoil:
             # Calculate clalpha
             clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
             clalpha *= 1 + radius / (s + radius)
@@ -566,7 +565,7 @@ class Rocket:
         
         #airfoil configuration
         else:
-            clalpha = airfoil[1]
+            clalpha = airfoil
             # Store values
             fin = [(0, 0, cpz), clalpha, "Fins"]
             self.aerodynamicSurfaces.append(fin)
