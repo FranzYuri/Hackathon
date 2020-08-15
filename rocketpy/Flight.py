@@ -12,18 +12,22 @@ import time
 from datetime import datetime, timedelta
 from inspect import signature, getsourcelines
 from collections import namedtuple
+from urllib.parse import urljoin
 
+import matplotlib
 import numpy as np
 from scipy import integrate
 from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-from pylatex import Document, Section, Figure, Itemize, NewPage, LineBreak
+from pylatex import Document, Section, Figure, Itemize, NewPage, LineBreak, NoEscape
 
 from .Function import Function
+from .Report import Report
 
-class Flight:
+
+class Flight(Report):
     """Keeps all flight information and has a method to simulate flight.
     
     Attributes
@@ -1095,6 +1099,9 @@ class Flight:
         self.tFinal = self.t
         if verbose:
             print("Simulation Completed at Time: {:3.4f} s".format(self.t))
+
+    def __str__(self):
+        return 'Flight'
 
     def uDotRail1(self, t, u, postProcessing=False):
         """Calculates derivative of u state vector with respect to time
@@ -3345,46 +3352,27 @@ class Flight:
 
         return data
 
-    def data_plots(self):
-        plots = [self.plot3dTrajectory, self.plotLinearKinematicsData, self.plotFlightPathAngleData,
+    @property
+    def plots(self):
+        return [self.plot3dTrajectory, self.plotLinearKinematicsData, self.plotFlightPathAngleData,
                  self.plotAttitudeData, self.plotAngularKinematicsData, self.plotTrajectoryForceData,
                  self.plotEnergyData, self.plotFluidMechanicsData, self.plotStabilityAndControlData]
 
-        for curve_plot in plots:
-            curve_plot()
-            yield
-
-    def report_section(self, doc):
-        with doc.create(Section('Rocket')):
-            self.allInfo()
-            data = self.__json__()
-            with doc.create(Itemize()) as itemize:
-                for key, item in data.items():
-                    itemize.add_item(f"{key} : {item}")
-            for curve_plot in self.data_plots():
-                with doc.create(Figure(position='htbp')) as plot:
-                    plot.add_plot(width=NoEscape(r'1\textwidth'), dpi=150)
-                    plt.clf()
-                    doc.append(LineBreak())
-
-        doc.append(NewPage())
-        return doc
-
-    def report(self):
-        # matplotlib.use('Agg')  # Not to use X server. For TravisCI.
+    def report(self, file_path, file_name='FlightReport'):
+        path = urljoin(file_path, file_name)
+        standard_backend = matplotlib.get_backend()
+        matplotlib.use('Agg')  # Non GUI backend to not plot graphs to the user.
         if self.postProcessed is False:
             self.postProcess()
 
         geometry_options = {"right": "2cm", "left": "2cm"}
-        doc = Document('matplotlib_ex-dpi', geometry_options=geometry_options)
+        doc = Document(path, geometry_options=geometry_options)
         doc = self.env.report_section(doc)
         doc = self.rocket.motor.report_section(doc)
         doc = self.rocket.report_section(doc)
         doc = self.report_section(doc)
-        doc.append('Conclusion.')
-
         doc.generate_pdf(clean_tex=False)
-        # matplotlib.use('TkAgg')
+        matplotlib.use(standard_backend) # Returning to the standard backend
 
     def animate(self, start=0, stop=None, fps=12, speed=4, elev=None, azim=None):
         """Plays an animation of the flight. Not implemented yet. Only

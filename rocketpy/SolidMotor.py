@@ -22,8 +22,10 @@ from matplotlib import cm
 from pylatex import Document, Subsection, Section, Figure, NoEscape, Itemize, NewPage, LineBreak
 
 from .Function import Function
+from .Report import Report
 
-class SolidMotor:
+
+class SolidMotor(Report):
     """Class to specify characteriscts and useful operations for solid
     motors.
     
@@ -264,6 +266,9 @@ class SolidMotor:
         self.evaluateMass()
         self.evaluateGeometry()
         self.evaluateInertia()
+
+    def __str__(self):
+        return 'SolidMotor'
 
     def reshapeThrustCurve(
         self, burnTime, totalImpulse, oldTotalImpulse=None, startAtZero=True
@@ -743,28 +748,10 @@ class SolidMotor:
 
         return None
 
-    def report_section(self, doc):
-        with doc.create(Section('Motor')):
-            self.allInfo()
-            data = self.__json__()
-            with doc.create(Itemize()) as itemize:
-                for key, item in data.items():
-                    itemize.add_item(f"{key} : {item}")
-            for curve_plot in self.data_plots():
-                with doc.create(Figure(position='htbp')) as plot:
-                    plot.add_plot(width=300, dpi=150)
-                    plt.clf()
-                    doc.append(LineBreak())
-
-        doc.append(NewPage())
-        return doc
-
-    def data_plots(self):
-        plots = [self.thrust, self.mass, self.massDot, self.grainInnerRadius, self.grainHeight, self.burnRate,
+    @property
+    def plots(self):
+        return [self.thrust, self.mass, self.massDot, self.grainInnerRadius, self.grainHeight, self.burnRate,
                  self.burnArea, self.Kn, self.inertiaI, self.inertiaIDot, self.inertiaZ, self.inertiaZDot]
-        for curve_plot in plots:
-            curve_plot()
-            yield
 
     def __json__(self):
         data = {

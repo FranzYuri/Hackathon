@@ -22,8 +22,10 @@ from matplotlib import cm
 from pylatex import Section, Figure, Itemize, NewPage, LineBreak
 
 from .Function import Function
+from .Report import Report
 
-class Rocket:
+
+class Rocket(Report):
 
     """Keeps all rocket and parachute information.
 
@@ -275,6 +277,9 @@ class Rocket:
         self.thrustToWeight.setOutputs('Thrust/Weight')
 
         return None
+
+    def __str__(self):
+        return 'Rocket'
 
     def evaluateReducedMass(self):
         """Calculates and returns the rocket's total reduced mass. The
@@ -801,30 +806,9 @@ class Rocket:
         # Return None
         return None
 
-    def report_section(self, doc):
-        with doc.create(Section('Rocket')):
-            self.allInfo()
-            data = self.__json__()
-            with doc.create(Itemize()) as itemize:
-                for key, item in data.items():
-                    itemize.add_item(f"{key} : {item}")
-            for curve_plot in self.data_plots():
-                with doc.create(Figure(position='htbp')) as plot:
-                    plot.add_plot(width=300, dpi=300)
-                    plt.clf()
-                    doc.append(LineBreak())
-
-        doc.append(NewPage())
-        return doc
-
-    def data_plots(self):
-        plots = [self.totalMass, self.reducedMass, self.staticMargin, self.powerOnDrag,
-                 self.powerOffDrag]
-        for curve_plot in plots:
-            curve_plot()
-            yield
-
-        self.thrustToWeight.plot(lower=0, upper=self.motor.burnOutTime)
+    @property
+    def plots(self):
+        return [self.totalMass, self.reducedMass, self.staticMargin, self.powerOnDrag, self.powerOffDrag]
 
     def __json__(self):
 

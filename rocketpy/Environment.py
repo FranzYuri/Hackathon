@@ -12,7 +12,9 @@ import time
 from datetime import datetime, timedelta
 from inspect import signature, getsourcelines
 from collections import namedtuple
+from urllib.parse import urljoin
 
+import matplotlib
 import numpy as np
 from scipy import integrate
 from scipy import linalg
@@ -20,6 +22,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from pylatex import Document, Subsection, Section, Figure, NoEscape, Itemize, NewPage
+
 import requests
 
 try:
@@ -350,6 +353,9 @@ class Environment:
             )
 
         return None
+
+    def __str__(self):
+        return 'Environment'
 
     def setLocation(self, latitude, longitude):
         """Set latitude and longitude of launch and update atmospheric
@@ -2688,6 +2694,18 @@ class Environment:
         plt.subplots_adjust(wspace=0.5)
         plt.show()
 
+    def report(self, file_path, file_name='Report'):
+        path = urljoin(file_path, file_name)
+        standard_backend = matplotlib.get_backend()
+        matplotlib.use('Agg')
+
+        geometry_options = {"right": "2cm", "left": "2cm"}
+        doc = Document(path, geometry_options=geometry_options)
+        doc = self.report_section(doc)
+
+        doc.generate_pdf(clean_tex=False)
+        matplotlib.use(standard_backend)
+
     def report_section(self, doc):
         with doc.create(Section('Environment')):
             self.allInfo()
@@ -2698,7 +2716,7 @@ class Environment:
             with doc.create(Figure(position='htbp')) as plot:
                 plot.add_plot(width=NoEscape(r'1\textwidth'), dpi=150)
                 plot.add_caption('Environmental data.')
-            plt.clf()
+            plt.close()
         doc.append(NewPage())
         return doc
 
@@ -2717,8 +2735,6 @@ class Environment:
             'Surface Temperature': self.temperature(self.elevation),
             'Surface Air Density': self.density(self.elevation),
             'Surface Speed of Sound': self.speedOfSound(self.elevation),
-            #'Atmospheric Model Type': self.atmosphericModelType,
-            #'Maximum Height(km)': self.maxExpectedHeight / 1000,
         }
         return data
 
