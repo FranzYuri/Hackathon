@@ -1,4 +1,4 @@
 # Participantes
-Guilherme Obalhe
-Victor
+Guilherme Obalhe,
+Victor,
 Ana Clara
