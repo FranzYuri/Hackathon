@@ -486,7 +486,7 @@ class Rocket:
         # Return self
         return self.aerodynamicSurfaces[-1]
 
-    def addFins(self, n, span, rootChord, tipChord, distanceToCM, radius=0):
+    def addFins(self, n, span, rootChord, tipChord, distanceToCM, radius=0, airfoil=[False]):
         """Create a fin set, storing its parameters as part of the
         aerodynamicSurfaces list. Its parameters are the axial position
         along the rocket and its derivative of the coefficient of lift
@@ -512,7 +512,10 @@ class Rocket:
             is default, use rocket radius. Otherwise, enter the radius
             of the rocket in the section of the fins, as this impacts
             its lift coefficient.
-
+        airfoil : list, bool, float, optional
+            Select airfoil type. If False, which is default, use flat fins
+            configuration. If first argument is True, in the second argument
+            clalpha should be inserted.
         Returns
         -------
         self : Rocket
@@ -546,19 +549,33 @@ class Rocket:
                 + (1 / 6) * (Cr + Ct - Cr * Ct / (Cr + Ct))
             )
 
-        # Calculate clalpha
-        clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
-        clalpha *= 1 + radius / (s + radius)
+        #flat fins configuration
+        if not airfoil[0]:
+            # Calculate clalpha
+            clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
+            clalpha *= 1 + radius / (s + radius)
+            # Store values
+            fin = [(0, 0, cpz), clalpha, "Fins"]
+            self.aerodynamicSurfaces.append(fin)
 
-        # Store values
-        fin = [(0, 0, cpz), clalpha, "Fins"]
-        self.aerodynamicSurfaces.append(fin)
+            # Refresh static margin calculation
+            self.evaluateStaticMargin()
 
-        # Refresh static margin calculation
-        self.evaluateStaticMargin()
+            # Return self
+            return self.aerodynamicSurfaces[-1]
+        
+        #airfoil configuration
+        else:
+            clalpha = airfoil[1]
+            # Store values
+            fin = [(0, 0, cpz), clalpha, "Fins"]
+            self.aerodynamicSurfaces.append(fin)
 
-        # Return self
-        return self.aerodynamicSurfaces[-1]
+            # Refresh static margin calculation
+            self.evaluateStaticMargin()
+
+            # Return self
+            return self.aerodynamicSurfaces[-1]
 
     def addParachute(
         self, name, CdS, trigger, samplingRate=100, lag=0, noise=(0, 0, 0)
