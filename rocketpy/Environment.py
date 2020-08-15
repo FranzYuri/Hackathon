@@ -9,6 +9,8 @@ import math
 import bisect
 import warnings
 import time
+import json
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
 from inspect import signature, getsourcelines
 from collections import namedtuple
@@ -949,6 +951,36 @@ class Environment:
             self.atmosphericModelDict = dictionary
         elif type == "CostumAtmosphere":
             self.processCostumAtmosphere(pressure, temperature, wind_u, wind_v)
+            
+        elif type == "JSON":
+           
+            if self.lat == latitude and self.lon == longitude:
+                lat = str(self.lat)
+                lon = str(self.lon)
+                
+            elif self.lat == None and self.lon == None:
+                print("Please set Location")
+
+            url = "https://node.windy.com/forecast/meteogram/ecmwf/{}/{}/?step=undefined".format(lat, lon)
+
+            uh = urllib.request.urlopen(url)
+
+            data = uh.read().decode()
+
+            try:
+                info = json.loads(data)
+            except:
+                info = None
+
+           
+            temperature=info["data"]["temp-surface"],
+            wind_u=info["data"]["wind_u-surface"],
+            wind_v=info["data"]["wind_v-surface"],  
+            
+            print('temp-surface:', info["data"]["temp-surface"])
+            print('wind_u-surface:', info["data"]["wind_u-surface"])
+            print('wind_v-surface:', info["data"]["wind_v-surface"])
+                        
         else:
             raise ValueError("Unknown model type.")
 
