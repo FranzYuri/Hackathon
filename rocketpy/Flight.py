@@ -1334,6 +1334,7 @@ class Flight:
                     # Add to total moment
                     M1 -= (compCp + a) * compLiftYB
                     M2 += (compCp + a) * compLiftXB
+        M3 += self.rocket.calculate_roll_moment(freestreamSpeed, self.env.speedOfSound(t), self.rocket.n, self.rocket.delta, omega3)      
         # Calculate derivatives
         # Angular acceleration
         alpha1 = (
