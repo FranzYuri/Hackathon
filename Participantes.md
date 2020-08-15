@@ -1,4 +1,6 @@
 # Participantes
-Oscar,
-Isabela,
-Arthur.
+
+## Equipe 7:
+- Oscar
+- Isabela
+- Arthur
