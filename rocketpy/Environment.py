@@ -2695,6 +2695,21 @@ class Environment:
         plt.show()
 
     def report(self, file_path, file_name='Report'):
+        """Generate a report with environment data.
+        This function needs to be refactored to use the Report CLass
+        abstraction. It's needed to refactor the plots of the Enviroment
+        class in order to abstracts those functions
+
+        Parameters
+        ----------
+        file_path : str
+            File path in which the file will be saved
+        file_name: str
+            Name of the report file
+        Returns
+        ----------
+        doc
+        """
         path = urljoin(file_path, file_name)
         standard_backend = matplotlib.get_backend()
         matplotlib.use('Agg')
@@ -2707,6 +2722,18 @@ class Environment:
         matplotlib.use(standard_backend)
 
     def report_section(self, doc):
+        """Builds a section with the self data,
+        this function can we called with different class to
+        build a report with data of various classes.
+
+        Parameters
+        ----------
+        doc : pylatex.Document
+            Object that manipulates the report
+        Returns
+        ----------
+        doc
+        """
         with doc.create(Section('Environment')):
             self.allInfo()
             data = self.__json__()
@@ -2721,6 +2748,16 @@ class Environment:
         return doc
 
     def __json__(self):
+        """Returns a Dictionary with Environment data.
+
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        Dict[str, Any]
+        """
         data = {
             'Acceleration of Gravity(m/s²)': str(self.g),
             'Launch Rail Length': self.rL,

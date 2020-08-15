@@ -750,10 +750,30 @@ class SolidMotor(Report):
 
     @property
     def plots(self):
+        """Returns all the plots callable functions.
+
+        Parameters
+        ------
+        None
+
+        Return
+        ------
+        List[callable]
+        """
         return [self.thrust, self.mass, self.massDot, self.grainInnerRadius, self.grainHeight, self.burnRate,
                  self.burnArea, self.Kn, self.inertiaI, self.inertiaIDot, self.inertiaZ, self.inertiaZDot]
 
     def __json__(self):
+        """Returns a Dictionary with Motor data.
+
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        Dict[str, Any]
+        """
         data = {
             "Nozzle Radius": str(self.nozzleRadius) + " m",
             "Nozzle Throat Radius": str(self.throatRadius) + " m",

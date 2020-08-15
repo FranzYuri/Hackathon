@@ -808,10 +808,29 @@ class Rocket(Report):
 
     @property
     def plots(self):
+        """Returns all the plots callable functions.
+
+        Parameters
+        ------
+        None
+
+        Return
+        ------
+        List[callable]
+        """
         return [self.totalMass, self.reducedMass, self.staticMargin, self.powerOnDrag, self.powerOffDrag]
 
     def __json__(self):
+        """Returns a Dictionary with Rocket data.
 
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        Dict[str, Any]
+        """
         data = {
             "Rocket Mass (No Propellant)" : "{:.3f} kg ".format(self.mass),
             "Rocket Mass (With Propellant)": "{:.3f} kg ".format(self.totalMass(0)),

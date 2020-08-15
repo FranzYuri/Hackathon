@@ -3270,7 +3270,16 @@ class Flight(Report):
         return None
 
     def __json__(self):
+        """Returns a Dictionary with FLight data.
 
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        Dict[str, Any]
+        """
         data = {
             "Frontal Surface Wind Speed": "{:.2f} m/s".format(self.frontalSurfaceWind),
             "Lateral Surface Wind Speed": "{:.2f} m/s".format(self.lateralSurfaceWind),
@@ -3354,11 +3363,33 @@ class Flight(Report):
 
     @property
     def plots(self):
+        """Returns all the plots callable functions.
+
+        Parameters
+        ------
+        None
+
+        Return
+        ------
+        List[callable]
+        """
         return [self.plot3dTrajectory, self.plotLinearKinematicsData, self.plotFlightPathAngleData,
-                 self.plotAttitudeData, self.plotAngularKinematicsData, self.plotTrajectoryForceData,
-                 self.plotEnergyData, self.plotFluidMechanicsData, self.plotStabilityAndControlData]
+                self.plotAttitudeData, self.plotAngularKinematicsData, self.plotTrajectoryForceData,
+                self.plotEnergyData, self.plotFluidMechanicsData, self.plotStabilityAndControlData]
 
     def report(self, file_path, file_name='FlightReport'):
+        """Generates a report containing Flight, Motor, Rocket, Environment.
+
+        Parameters
+        ----------
+        file_path : str
+            File path in which the file will be saved
+        file_name: str
+            Name of the report file
+        Returns
+        ----------
+        None
+        """
         path = urljoin(file_path, file_name)
         standard_backend = matplotlib.get_backend()
         matplotlib.use('Agg')  # Non GUI backend to not plot graphs to the user.
