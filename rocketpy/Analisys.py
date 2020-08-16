@@ -212,18 +212,17 @@ class Analisys:
             apogeebymass.plot(lower_bound_mass, upper_bound_mass, int(numPoints))
             self.rocket.mass = originalMass
             return None
-        else:
 
 
     def CompareRockets(self, rocket):
         """Takes two different rockets and prints th flight trajectory of both
         of them in the same plot
-        
+            
         Parameters
         ----------
         rocket : list
             List of rockets
-        
+            
         Return
         ------
         None
@@ -234,11 +233,11 @@ class Analisys:
 
         # Post-process results
         if flightRocket1.postProcessed is False:
-            flightRocket1.postProcess()
+                flightRocket1.postProcess()
 
         if flightRocket2.postProcessed is False:
             flightRocket2.postProcess()
-        
+            
         # Get max and min x and y
             # Rocket 0
         maxZ0 = max(flightRocket1.z[:, 1] - flightRocket1.env.elevation )
@@ -267,10 +266,10 @@ class Analisys:
         fig1 = plt.figure(figsize=(9, 9))
 
         ax1 = plt.subplot(111, projection="3d")
-        
+            
         ax1.plot(
             flightRocket1.x[:, 1], flightRocket1.y[:, 1], zs= 0, zdir="z", linestyle="--",
-        )
+            )
         ax1.plot(flightRocket1.x[:, 1], flightRocket1.z[:, 1] - flightRocket1.env.elevation, zs=minXY, zdir="y", linestyle="--")
         ax1.plot(flightRocket1.y[:, 1], flightRocket1.z[:, 1] - flightRocket1.env.elevation, zs=minXY, zdir="x", linestyle="--")
         ax1.plot(flightRocket1.x[:, 1], flightRocket1.y[:, 1], flightRocket1.z[:, 1] - flightRocket1.env.elevation, linewidth='2',label='Rocket 1')
