@@ -19,6 +19,9 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+import plotly.express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 from .Function import Function
 
@@ -2304,25 +2307,41 @@ class Flight:
         minXY = min(minX, minY)
 
         # Create figure
-        fig1 = plt.figure(figsize=(9, 9))
-        ax1 = plt.subplot(111, projection="3d")
-        ax1.plot(
-            self.x[:, 1], self.y[:, 1], zs= 0, zdir="z", linestyle="--"
-        )
-        ax1.plot(self.x[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="y", linestyle="--")
-        ax1.plot(self.y[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="x", linestyle="--")
-        ax1.plot(self.x[:, 1], self.y[:, 1], self.z[:, 1] - self.env.elevation, linewidth='2')
-        ax1.scatter(0, 0, 0)
-        ax1.set_xlabel("X - East (m)")
-        ax1.set_ylabel("Y - North (m)")
-        ax1.set_zlabel("Z - Altitude Above Ground Level (m)")
-        ax1.set_title("Flight Trajectory")
-        ax1.set_zlim3d([0, maxZ])
-        ax1.set_ylim3d([minXY, maxXY])
-        ax1.set_xlim3d([minXY, maxXY])
-        ax1.view_init(15, 45)
-        plt.show()
+        #fig1 = plt.figure(figsize=(9, 9))
+        #ax1 = plt.subplot(111, projection="3d")
+        #ax1.plot(
+        #    self.x[:, 1], self.y[:, 1], zs= 0, zdir="z", linestyle="--"
+        #)
+        #ax1.plot(self.x[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="y", linestyle="--")
+        #ax1.plot(self.y[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="x", linestyle="--")
+        #ax1.plot(self.x[:, 1], self.y[:, 1], self.z[:, 1] - self.env.elevation, linewidth='2')
+        #ax1.scatter(0, 0, 0)
+        #ax1.set_xlabel("X - East (m)")
+        #ax1.set_ylabel("Y - North (m)")
+        #ax1.set_zlabel("Z - Altitude Above Ground Level (m)")
+        #ax1.set_title("Flight Trajectory")
+        #ax1.set_zlim3d([0, maxZ])
+        #ax1.set_ylim3d([minXY, maxXY])
+        #ax1.set_xlim3d([minXY, maxXY])
+        #ax1.view_init(15, 45)
+        #plt.show()
+        
+        fig = make_subplots(rows=1, cols=2, specs=[[{"type": "scene"}, {"type": "scene"}]])
+        
+        fig.add_trace(self.x[:, 1], y=self.y[:, 1], z=self.z[:, 1] - self.env.elevation), row=1, col=2)
 
+        fig.add_trace(go.Scatter3d(x=m, y=n, z=o), row=1, col=2)
+        
+        fig.update_layout(height=600, width=700, title_text="Flight Trajectory")
+        
+        fig.update_xaxes(title_text="X - East (m)", range=[minXY, maxXY], row=1, col=1)
+        #fig.update_xaxes(title_text="xaxis 2 title", range=[10, 50], row=1, col=2)
+        
+        fig.update_yaxes(title_text="Y - North (m)", range=[minXY, maxXY], row=1, col=1)
+        #fig.update_yaxes(title_text="yaxis 2 title", range=[40, 80], row=1, col=2)
+        
+        fig.show()
+        
         return None
 
     def plotLinearKinematicsData(self):
@@ -2341,66 +2360,92 @@ class Flight:
             self.postProcess()
 
         # Velocity and acceleration plots
-        fig2 = plt.figure(figsize=(9, 12))
+        #fig2 = plt.figure(figsize=(9, 12))
 
-        ax1 = plt.subplot(414)
-        ax1.plot(self.vx[:, 0], self.vx[:, 1], color="#ff7f0e")
-        ax1.set_xlim(0, self.tFinal)
-        ax1.set_title("Velocity X | Acceleration X")
-        ax1.set_xlabel("Time (s)")
-        ax1.set_ylabel("Velocity X (m/s)", color="#ff7f0e")
-        ax1.tick_params("y", colors="#ff7f0e")
-        ax1.grid(True)
+        #ax1 = plt.subplot(414)
+        #ax1.plot(self.vx[:, 0], self.vx[:, 1], color="#ff7f0e")
+        #ax1.set_xlim(0, self.tFinal)
+        #ax1.set_title("Velocity X | Acceleration X")
+        #ax1.set_xlabel("Time (s)")
+        #ax1.set_ylabel("Velocity X (m/s)", color="#ff7f0e")
+        #ax1.tick_params("y", colors="#ff7f0e")
+        #ax1.grid(True)
 
-        ax1up = ax1.twinx()
-        ax1up.plot(self.ax[:, 0], self.ax[:, 1], color="#1f77b4")
-        ax1up.set_ylabel("Acceleration X (m/s²)", color="#1f77b4")
-        ax1up.tick_params("y", colors="#1f77b4")
+        #ax1up = ax1.twinx()
+        #ax1up.plot(self.ax[:, 0], self.ax[:, 1], color="#1f77b4")
+        #ax1up.set_ylabel("Acceleration X (m/s²)", color="#1f77b4")
+        #ax1up.tick_params("y", colors="#1f77b4")
 
-        ax2 = plt.subplot(413)
-        ax2.plot(self.vy[:, 0], self.vy[:, 1], color="#ff7f0e")
-        ax2.set_xlim(0, self.tFinal)
-        ax2.set_title("Velocity Y | Acceleration Y")
-        ax2.set_xlabel("Time (s)")
-        ax2.set_ylabel("Velocity Y (m/s)", color="#ff7f0e")
-        ax2.tick_params("y", colors="#ff7f0e")
-        ax2.grid(True)
+        #ax2 = plt.subplot(413)
+        #ax2.plot(self.vy[:, 0], self.vy[:, 1], color="#ff7f0e")
+        #ax2.set_xlim(0, self.tFinal)
+        #ax2.set_title("Velocity Y | Acceleration Y")
+        #ax2.set_xlabel("Time (s)")
+        #ax2.set_ylabel("Velocity Y (m/s)", color="#ff7f0e")
+        #ax2.tick_params("y", colors="#ff7f0e")
+        #ax2.grid(True)
 
-        ax2up = ax2.twinx()
-        ax2up.plot(self.ay[:, 0], self.ay[:, 1], color="#1f77b4")
-        ax2up.set_ylabel("Acceleration Y (m/s²)", color="#1f77b4")
-        ax2up.tick_params("y", colors="#1f77b4")
+        #ax2up = ax2.twinx()
+        #ax2up.plot(self.ay[:, 0], self.ay[:, 1], color="#1f77b4")
+        #ax2up.set_ylabel("Acceleration Y (m/s²)", color="#1f77b4")
+        #ax2up.tick_params("y", colors="#1f77b4")
 
-        ax3 = plt.subplot(412)
-        ax3.plot(self.vz[:, 0], self.vz[:, 1], color="#ff7f0e")
-        ax3.set_xlim(0, self.tFinal)
-        ax3.set_title("Velocity Z | Acceleration Z")
-        ax3.set_xlabel("Time (s)")
-        ax3.set_ylabel("Velocity Z (m/s)", color="#ff7f0e")
-        ax3.tick_params("y", colors="#ff7f0e")
-        ax3.grid(True)
+        #ax3 = plt.subplot(412)
+        #ax3.plot(self.vz[:, 0], self.vz[:, 1], color="#ff7f0e")
+        #ax3.set_xlim(0, self.tFinal)
+        #ax3.set_title("Velocity Z | Acceleration Z")
+        #ax3.set_xlabel("Time (s)")
+        #ax3.set_ylabel("Velocity Z (m/s)", color="#ff7f0e")
+        #ax3.tick_params("y", colors="#ff7f0e")
+        #ax3.grid(True)
 
-        ax3up = ax3.twinx()
-        ax3up.plot(self.az[:, 0], self.az[:, 1], color="#1f77b4")
-        ax3up.set_ylabel("Acceleration Z (m/s²)", color="#1f77b4")
-        ax3up.tick_params("y", colors="#1f77b4")
+        #ax3up = ax3.twinx()
+        #ax3up.plot(self.az[:, 0], self.az[:, 1], color="#1f77b4")
+        #ax3up.set_ylabel("Acceleration Z (m/s²)", color="#1f77b4")
+        #ax3up.tick_params("y", colors="#1f77b4")
 
-        ax4 = plt.subplot(411)
-        ax4.plot(self.speed[:, 0], self.speed[:, 1], color="#ff7f0e")
-        ax4.set_xlim(0, self.tFinal)
-        ax4.set_title("Velocity Magnitude | Acceleration Magnitude")
-        ax4.set_xlabel("Time (s)")
-        ax4.set_ylabel("Velocity (m/s)", color="#ff7f0e")
-        ax4.tick_params("y", colors="#ff7f0e")
-        ax4.grid(True)
+        #ax4 = plt.subplot(411)
+        #ax4.plot(self.speed[:, 0], self.speed[:, 1], color="#ff7f0e")
+        #ax4.set_xlim(0, self.tFinal)
+        #ax4.set_title("Velocity Magnitude | Acceleration Magnitude")
+        #ax4.set_xlabel("Time (s)")
+        #ax4.set_ylabel("Velocity (m/s)", color="#ff7f0e")
+        #ax4.tick_params("y", colors="#ff7f0e")
+        #ax4.grid(True)
 
-        ax4up = ax4.twinx()
-        ax4up.plot(self.acceleration[:, 0], self.acceleration[:, 1], color="#1f77b4")
-        ax4up.set_ylabel("Acceleration (m/s²)", color="#1f77b4")
-        ax4up.tick_params("y", colors="#1f77b4")
+        #ax4up = ax4.twinx()
+        #ax4up.plot(self.acceleration[:, 0], self.acceleration[:, 1], color="#1f77b4")
+        #ax4up.set_ylabel("Acceleration (m/s²)", color="#1f77b4")
+        #ax4up.tick_params("y", colors="#1f77b4")
 
-        plt.subplots_adjust(hspace=0.5)
-        plt.show()
+        fig = make_subplots(rows=2, cols=2, subplot_titles=(
+            "Velocity X | Acceleration X", 
+            "Velocity Y | Acceleration Y", 
+            "Velocity Z | Acceleration Z", 
+            "Velocity Magnitude | Acceleration Magnitude"))
+
+        # Add traces
+        fig.add_trace(go.Scatter(x=self.vx[:, 0], y=self.vx[:, 1]), row=1, col=1)
+        fig.add_trace(go.Scatter(x=self.vy[:, 0], y=self.vy[:, 1]), row=1, col=2)
+        fig.add_trace(go.Scatter(x=self.vz[:, 0], y=self.vz[:, 1]), row=2, col=1)
+        fig.add_trace(go.Scatter(x=self.speed[:, 0], y=self.speed[:, 1]), row=2, col=2)
+
+        # Update xaxis properties
+        fig.update_xaxes(title_text="Time (s)", row=1, col=1)
+        fig.update_xaxes(title_text="Time (s)", row=1, col=2)
+        fig.update_xaxes(title_text="Time (s)", row=2, col=1)
+        fig.update_xaxes(title_text="Time (s)", row=2, col=2)
+
+        # Update yaxis properties
+        fig.update_yaxes(title_text="Velocity X (m/s)", row=1, col=1)
+        fig.update_yaxes(title_text="Velocity Y (m/s)", row=1, col=2)
+        fig.update_yaxes(title_text="Velocity Z (m/s)", row=2, col=1)
+        fig.update_yaxes(title_text="Velocity (m/s)", row=2, col=2)
+
+        # Update title and height
+        fig.update_layout(title_text="Velocity and acceleration plots", height=700)
+
+        fig.show()
         return None
 
     def plotAttitudeData(self):
@@ -2427,46 +2472,81 @@ class Flight:
             eventTimeIndex = -1
 
         # Angular position plots
-        fig3 = plt.figure(figsize=(9, 12))
+        #fig3 = plt.figure(figsize=(9, 12))
 
-        ax1 = plt.subplot(411)
-        ax1.plot(self.e0[:, 0], self.e0[:, 1], label="$e_0$")
-        ax1.plot(self.e1[:, 0], self.e1[:, 1], label="$e_1$")
-        ax1.plot(self.e2[:, 0], self.e2[:, 1], label="$e_2$")
-        ax1.plot(self.e3[:, 0], self.e3[:, 1], label="$e_3$")
-        ax1.set_xlim(0, eventTime)
-        ax1.set_xlabel("Time (s)")
-        ax1.set_ylabel("Euler Parameters")
-        ax1.set_title("Euler Parameters")
-        ax1.legend()
-        ax1.grid(True)
+        #ax1 = plt.subplot(411)
+        #ax1.plot(self.e0[:, 0], self.e0[:, 1], label="$e_0$")
+        #ax1.plot(self.e1[:, 0], self.e1[:, 1], label="$e_1$")
+        #ax1.plot(self.e2[:, 0], self.e2[:, 1], label="$e_2$")
+        #ax1.plot(self.e3[:, 0], self.e3[:, 1], label="$e_3$")
+        #ax1.set_xlim(0, eventTime)
+        #ax1.set_xlabel("Time (s)")
+        #ax1.set_ylabel("Euler Parameters")
+        #ax1.set_title("Euler Parameters")
+        #ax1.legend()
+        #ax1.grid(True)
 
-        ax2 = plt.subplot(412)
-        ax2.plot(self.psi[:, 0], self.psi[:, 1])
-        ax2.set_xlim(0, eventTime)
-        ax2.set_xlabel("Time (s)")
-        ax2.set_ylabel("ψ (°)")
-        ax2.set_title("Euler Precession Angle")
-        ax2.grid(True)
+        #ax2 = plt.subplot(412)
+        #ax2.plot(self.psi[:, 0], self.psi[:, 1])
+        #ax2.set_xlim(0, eventTime)
+        #ax2.set_xlabel("Time (s)")
+        #ax2.set_ylabel("ψ (°)")
+        #ax2.set_title("Euler Precession Angle")
+        #ax2.grid(True)
 
-        ax3 = plt.subplot(413)
-        ax3.plot(self.theta[:, 0], self.theta[:, 1], label="θ - Nutation")
-        ax3.set_xlim(0, eventTime)
-        ax3.set_xlabel("Time (s)")
-        ax3.set_ylabel("θ (°)")
-        ax3.set_title("Euler Nutation Angle")
-        ax3.grid(True)
+        #ax3 = plt.subplot(413)
+        #ax3.plot(self.theta[:, 0], self.theta[:, 1], label="θ - Nutation")
+        #ax3.set_xlim(0, eventTime)
+        #ax3.set_xlabel("Time (s)")
+        #ax3.set_ylabel("θ (°)")
+        #ax3.set_title("Euler Nutation Angle")
+        #ax3.grid(True)
 
-        ax4 = plt.subplot(414)
-        ax4.plot(self.phi[:, 0], self.phi[:, 1], label="φ - Spin")
-        ax4.set_xlim(0, eventTime)
-        ax4.set_xlabel("Time (s)")
-        ax4.set_ylabel("φ (°)")
-        ax4.set_title("Euler Spin Angle")
-        ax4.grid(True)
+        #ax4 = plt.subplot(414)
+        #ax4.plot(self.phi[:, 0], self.phi[:, 1], label="φ - Spin")
+        #ax4.set_xlim(0, eventTime)
+        #ax4.set_xlabel("Time (s)")
+        #ax4.set_ylabel("φ (°)")
+        #ax4.set_title("Euler Spin Angle")
+        #ax4.grid(True)
 
-        plt.subplots_adjust(hspace=0.5)
-        plt.show()
+        #plt.subplots_adjust(hspace=0.5)
+        #plt.show()
+        
+        fig = make_subplots(rows=2, cols=2, subplot_titles=(
+            "Euler Parameters", 
+            "Euler Precession Angle", 
+            "Euler Nutation Angle", 
+            "Euler Spin Angle"))
+
+        # Add traces
+        fig.add_trace(go.Scatter(x=self.e0[:, 0], y=self.e0[:, 1], name="$e_0$"), row=1, col=1)
+        fig.add_trace(go.Scatter(x=self.e1[:, 0], y=self.e1[:, 1], name="$e_0$"), row=1, col=1)
+        fig.add_trace(go.Scatter(x=self.e2[:, 0], y=self.e2[:, 1], name="$e_0$"), row=1, col=1)
+        fig.add_trace(go.Scatter(x=self.e3[:, 0], y=self.e3[:, 1], name="$e_0$"), row=1, col=1)
+        
+        fig.add_trace(go.Scatter(x=self.psi[:, 0], y=self.psi[:, 1]), row=1, col=2)
+        
+        fig.add_trace(go.Scatter(x=self.theta[:, 0], y=self.theta[:, 1], name="θ - Nutation"), row=2, col=1)
+        
+        fig.add_trace(go.Scatter(x=self.phi[:, 0], y=self.phi[:, 1], name="φ - Spin""), row=2, col=2)
+
+        # Update xaxis properties
+        fig.update_xaxes(title_text="Time (s)", row=1, col=1)
+        fig.update_xaxes(title_text="Time (s)", row=1, col=2)
+        fig.update_xaxes(title_text="Time (s)", row=2, col=1)
+        fig.update_xaxes(title_text="Time (s)", row=2, col=2)
+
+        # Update yaxis properties
+        fig.update_yaxes(title_text="Euler Parameters", row=1, col=1)
+        fig.update_yaxes(title_text="ψ (°)", row=1, col=2)
+        fig.update_yaxes(title_text="θ (°)", row=2, col=1)
+        fig.update_yaxes(title_text="φ (°)", row=2, col=2)
+
+        # Update title and height
+        fig.update_layout(title_text="Angular position graphs", height=700)
+
+        fig.show()
 
         return None
 
@@ -2496,32 +2576,53 @@ class Flight:
         
         # Path, Attitude and Lateral Attitude Angle
         # Angular position plots
-        fig5 = plt.figure(figsize=(9, 6))
+        #fig5 = plt.figure(figsize=(9, 6))
 
-        ax1 = plt.subplot(211)
-        ax1.plot(self.pathAngle[:, 0], self.pathAngle[:, 1], label="Flight Path Angle")
-        ax1.plot(
-            self.attitudeAngle[:, 0],
-            self.attitudeAngle[:, 1],
-            label="Rocket Attitude Angle",
-        )
-        ax1.set_xlim(0, eventTime)
-        ax1.legend()
-        ax1.grid(True)
-        ax1.set_xlabel("Time (s)")
-        ax1.set_ylabel("Angle (°)")
-        ax1.set_title("Flight Path and Attitude Angle")
+        #ax1 = plt.subplot(211)
+        #ax1.plot(self.pathAngle[:, 0], self.pathAngle[:, 1], label="Flight Path Angle")
+        #ax1.plot(
+           # self.attitudeAngle[:, 0],
+          #  self.attitudeAngle[:, 1],
+         #   label="Rocket Attitude Angle",
+        #)
+        #ax1.set_xlim(0, eventTime)
+        #ax1.legend()
+        #ax1.grid(True)
+        #ax1.set_xlabel("Time (s)")
+        #ax1.set_ylabel("Angle (°)")
+        #ax1.set_title("Flight Path and Attitude Angle")
 
-        ax2 = plt.subplot(212)
-        ax2.plot(self.lateralAttitudeAngle[:, 0], self.lateralAttitudeAngle[:, 1])
-        ax2.set_xlim(0, eventTime)
-        ax2.set_xlabel("Time (s)")
-        ax2.set_ylabel("Lateral Attitude Angle (°)")
-        ax2.set_title("Lateral Attitude Angle")
-        ax2.grid(True)
+        #ax2 = plt.subplot(212)
+        #ax2.plot(self.lateralAttitudeAngle[:, 0], self.lateralAttitudeAngle[:, 1])
+        #ax2.set_xlim(0, eventTime)
+        #ax2.set_xlabel("Time (s)")
+        #ax2.set_ylabel("Lateral Attitude Angle (°)")
+        #ax2.set_title("Lateral Attitude Angle")
+        #ax2.grid(True)
 
-        plt.subplots_adjust(hspace=0.5)
-        plt.show()
+        #plt.subplots_adjust(hspace=0.5)
+        #plt.show()
+                                 
+        fig = make_subplots(rows=1, cols=2, subplot_titles=("Flight Path and Attitude Angle", "Lateral Attitude Angle"))
+
+        # Add traces
+        fig.add_trace(go.Scatter(x=self.pathAngle[:, 0], y=self.pathAngle[:, 1], name="Rocket Attitude Angle"), row=1, col=1)
+        fig.add_trace(go.Scatter(x=self.attitudeAngle[:, 0], self.attitudeAngle[:, 1], name="Flight Path and Attitude Angle"), row=1, col=1)
+             
+        fig.add_trace(go.Scatter(x=self.lateralAttitudeAngle[:, 0], y=self.lateralAttitudeAngle[:, 1]), row=1, col=2)
+        
+        # Update xaxis properties
+        fig.update_xaxes(title_text="Time (s)", row=1, col=1)
+        fig.update_xaxes(title_text="Time (s)", row=1, col=2)
+
+        # Update yaxis properties
+        fig.update_yaxes(title_text="Angle (°)", row=1, col=1)
+        fig.update_yaxes(title_text="Lateral Attitude Angle (°)", row=1, col=2)
+
+        # Update title and height
+        fig.update_layout(title_text="Flight path and Rocket Attitude angle", height=700)
+
+        fig.show()        
 
         return None
 
