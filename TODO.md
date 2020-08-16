@@ -16,6 +16,8 @@
 | Elevation profile data                    | Since the Earth is not flat, we can implement some functions that allow us to more accurately determine the impact coordinates by researching the point at which the rocket crosses the Earth's relief. Good candidates for this job are SRTM data.                                                                        | Medium                | None                             |
 | Airfoil profiles                          | Currently, the Rocket class supports only flat fins, although the fins in real life can have more sophisticated aerodynamic profiles. To start solving this problem, we could allow the user to change the CLalpha of the fins before simulating.                                                                          | Easy                  | None                             |
 | Integration with Fusion360 (or similar)   | Make RocketPy able to read a 3D geometry file that contains the entire Rocket description. This could save us a few minutes, as we would no longer need to measure multiple distances in our CAD software.                                                                                                                 | Medium-Hard           | Autodesk Fusion 360 API          |
+| Improve pressure export | Improve the exportation of pressure values to facilitate the simulation of the apoggee detection algorithm. It currently supports the "noisy" pressure output only after parachutes have been defined. | Medium | None |
+| Optimize coefficients for the detection algorithm | Optimize the detection filter coeffitients for the specific launch | Hard | Adaptive Digital Filtering and C++ |
 
 # New Usage Examples and Documentation that Contributors can Create
 
