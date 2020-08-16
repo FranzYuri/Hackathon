@@ -254,6 +254,7 @@ class Environment:
         latitude=None,
         longitude=None,
         elevation=0,
+        timeZone="America/Sao_Paulo",
     ):
         """Initialize Environment class, saving launch rail length,
         launch date, location coordinates and elevation. Note that
@@ -325,7 +326,7 @@ class Environment:
 
         return None
 
-    def setDate(self, date):
+    def setDate(self, date, timeZone="America/Sao_Paulo",):
         """Set date and time of launch and update weather conditions if
         date dependent atmospheric model is used.
         
@@ -340,7 +341,12 @@ class Environment:
         """
         # Store date
         self.date = datetime(*date)
-
+        
+        self.timezone = timeZone
+        tz = pytz.timezone(self.timezone)
+        #print(pytz.all_timezones)
+        self.local_date = self.date.replace(tzinfo=pytz.UTC).astimezone(tz)
+        
         # Update atmospheric conditions if atmosphere type is Forecast,
         # Reanalysis or Ensemble
         if self.atmosphericModelType in ["Forecast", "Reanalysis", "Ensemble"]:
@@ -2588,6 +2594,8 @@ class Environment:
         print("\nLaunch Rail Length: ", self.rL, " m")
         if self.date != None:
             print("Launch Date: ", self.date, " UTC")
+            print("Launch Date: ", self.local_date, self.timezone)
+      
         if self.lat != None and self.lon != None:
             print("Launch Site Latitude: {:.5f}°".format(self.lat))
             print("Launch Site Longitude: {:.5f}°".format(self.lon))
