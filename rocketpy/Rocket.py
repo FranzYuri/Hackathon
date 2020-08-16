@@ -97,6 +97,11 @@ class Rocket:
                 force is the dynamic pressure computed on the parachute
                 times its CdS coefficient. Has units of area and must be
                 given in meters squared.
+            Radius : float
+                Radius of the parachute when fully open
+            Parachute_Type: string
+                Names what type of parachute it is, making it possible that in the calculation 
+                determinate the time to a fully extended cannopy. 
             trigger : function
                 Function which defines if the parachute ejection system is
                 to be triggered. It must take as input the freestream
@@ -561,7 +566,7 @@ class Rocket:
         return self.aerodynamicSurfaces[-1]
 
     def addParachute(
-        self, name, CdS, trigger, samplingRate=100, lag=0, noise=(0, 0, 0)
+        self, name, CdS, Radius, Parachute_Type, trigger, samplingRate=100, lag=0, noise=(0, 0, 0)
     ):
         """Create a new parachute, storing its parameters such as
         opening delay, drag coefficients and trigger function.
@@ -618,6 +623,8 @@ class Rocket:
         parachute.samplingRate = samplingRate
         parachute.lag = lag
         parachute.CdS = CdS
+        parachute.Radius = Radius
+        parachute.Parachute_Type = Parachute_Type
         parachute.name = name
         parachute.noiseBias = noise[0]
         parachute.noiseDeviation = noise[1]
