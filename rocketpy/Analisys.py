@@ -6,6 +6,8 @@ __license__ = "MIT"
 
 import math
 import matplotlib.pyplot as plt
+import numpy as np
+from rocketpy import Environment, Function, Flight, Rocket
 
 class Analisys:
     """Uses other classes to make analisys of the chosen rocket.
@@ -23,7 +25,7 @@ class Analisys:
             Flight object keeping all flight information. See Flight class for
             more information.
     """
-    def __init__(self, environment, rocket, flight):
+    def __init__(self, environment, rocket):
         """Make analisys calculations.
 
         Parameters
@@ -37,10 +39,8 @@ class Analisys:
             Object to simulate rocket's flight.
         
         """
-        self.environment = environment
+        self.env = environment
         self.rocket = rocket
-        self.flight = flight
-
     def exportElipsesToKML(self, impact_ellipses, filename, origin_lat, origin_lon):
         """Generates a KML file with the ellipses on the impact point.
 
@@ -158,3 +158,58 @@ class Analisys:
         kml_file.write(kml)
         kml_file.close()
         
+    def Apogee_By_RocketMass(self, lower_bound_mass, upper_bound_mass, numPoints
+    ):
+        """Takes a minimum and a maximum value of mass and calculates the apogee
+        for various values in beetwen. It then creates and prints a graph where
+        the masses are shown in the x axis and the apogees in the y axis.
+
+        The calculation for the apogee considers virtual masses of the rocket 
+        without propellant and it does not impact the center of mass or the 
+        moments of inertia. Environment wind effects are always deativated to 
+        avoid distortions caused by flight instability.
+        
+        Parameters
+        ----------
+        mass_small : float
+            smallest value of mass of which the apogee will be calculated
+        mass_big : float
+            biggest value of mass of which the apogee will be calculated
+        numPoints : int
+            number of points tha will be ploted
+        
+        Return
+        ------
+        None
+        """
+        originalMass = self.rocket.mass 
+        def apogee(mass):
+            mass_total = mass
+            mass_propellant = self.rocket.motor.propellantInitialMass
+            mass_unloaded = mass_total - mass_propellant
+            self.rocket.mass = mass_unloaded
+
+            #creates a copy of the provided environment to Anlisys object and 
+            #deactivates wind effects
+            env2 = self.env
+            env2.setAtmosphericModel("StandardAtmosphere")
+            TF = Flight(self.rocket,
+                        env2,
+                        inclination=90,
+                        heading=90,
+                        initialSolution=None,
+                        terminateOnApogee=True,
+                        maxTime=600,
+                        maxTimeStep=np.inf,
+                        minTimeStep=0,
+                        rtol=1e-6,
+                        atol=6 * [1e-3] + 4 * [1e-6] + 3 * [1e-3],
+                        timeOvershoot=True,
+                        verbose=False,
+                        )
+            return TF.apogee - env2.elevation
+        apogeebymass = Function(apogee, inputs="Mass (kg) - with propellant", outputs="Estimated Apogee AGL (m)")
+        apogeebymass.plot(lower_bound_mass, upper_bound_mass, int(numPoints))
+        self.rocket.mass = originalMass
+        return None
+    
