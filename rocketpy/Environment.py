@@ -21,6 +21,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import requests
 
+from timezonefinder import TimezoneFinder
+import pytz
+
 try:
     import netCDF4
 except ImportError:
@@ -295,6 +298,7 @@ class Environment:
         -------
         None
         """
+
         # Save launch rail ength
         self.rL = railLength
 
@@ -323,6 +327,7 @@ class Environment:
         # Save elevation
         self.setElevation(elevation)
 
+
         return None
 
     def setDate(self, date):
@@ -340,6 +345,11 @@ class Environment:
         """
         # Store date
         self.date = datetime(*date)
+        tf= TimezoneFinder()
+        timeZone= tf.timezone_at(lng= self.lon,lat= self.lat)
+        self.timezone = timeZone
+        tz = pytz.timezone(self.timezone)
+        self.local_date = self.date.replace(tzinfo=pytz.UTC).astimezone(tz)
 
         # Update atmospheric conditions if atmosphere type is Forecast,
         # Reanalysis or Ensemble
@@ -370,7 +380,6 @@ class Environment:
         # Store latitude and longitude
         self.lat = latitude
         self.lon = longitude
-
         # Update atmospheric conditions if atmosphere type is Forecast,
         # Reanalysis or Ensemble
         if self.atmosphericModelType in ["Forecast", "Reanalysis", "Ensemble"]:
@@ -2588,6 +2597,7 @@ class Environment:
         print("\nLaunch Rail Length: ", self.rL, " m")
         if self.date != None:
             print("Launch Date: ", self.date, " UTC")
+            print ("Launch Date: ",  self.local_date, self.timezone)
         if self.lat != None and self.lon != None:
             print("Launch Site Latitude: {:.5f}°".format(self.lat))
             print("Launch Site Longitude: {:.5f}°".format(self.lon))
@@ -2707,6 +2717,7 @@ class Environment:
         print("\nLaunch Rail Length: ", self.rL, " m")
         if self.date != None:
             print("Launch Date: ", self.date, " UTC")
+            print ("Launch Date: ",  self.local_date, self.timezone)
         if self.lat != None and self.lon != None:
             print("Launch Site Latitude: {:.5f}°".format(self.lat))
             print("Launch Site Longitude: {:.5f}°".format(self.lon))
