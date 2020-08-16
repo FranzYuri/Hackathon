@@ -457,6 +457,7 @@ class Rocket:
         self : Rocket
             Object of the Rocket class.
         """
+        self.CMToNonecone = distanceToCM + length
         # Analyze type
         if kind == "conical":
             k = 1 - 1 / 3
@@ -630,8 +631,9 @@ class Rocket:
         parachute.cleanPressureSignal = []
         parachute.noisyPressureSignal = []
 
-        # Add parachute to list of parachutes
+        # Add parachute to list of parachutes #self.parachutes = []
         self.parachutes.append(parachute)
+        self.triggers = {name: trigger}
 
         # Return self
         return self.parachutes[-1]
