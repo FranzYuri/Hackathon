@@ -2284,8 +2284,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2334,8 +2335,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2417,8 +2419,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2489,8 +2492,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2548,8 +2552,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2636,10 +2641,12 @@ class Flight:
 
         Parameters
         ----------
-        filenameRailButton : string
-            Filename to save the rail button plots
-        filenameAerodynamic : string
-            Filename to save the aerodynamic plots
+        filenameRailButton : string, optional
+            Filename to save the rail button plots. If not given, no plots will
+            be saved to files.
+        filenameAerodynamic : string, optional
+            Filename to save the aerodynamic plots. If not given, no plots will
+            be saved to files.
         
         Return
         ------
@@ -2764,8 +2771,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
 
         Returns
         -------
@@ -2864,8 +2872,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2951,8 +2960,9 @@ class Flight:
             The fin thickness, in meters
         shearModulus : float
             Shear Modulus of fins' material, must be given in Pascal
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -3094,8 +3104,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -3172,8 +3183,9 @@ class Flight:
 
         Parameters
         ----------
-        filename : list, string
-            Filenames to save the plots (in the order they are plotted)
+        filename : list, string, optional
+            Filenames to save the plots (in the order they are plotted). If not
+            given, no plots will be saved to files.
         
         Return
         ------
@@ -3285,8 +3297,9 @@ class Flight:
 
         Parameters
         ----------
-        filenames : list
-            Filenames of the plots
+        filename : list, string, optional
+            Filenames to save the plots (in the order they are plotted). If not
+            given, no plots will be saved to files.
         
         Return
         ------

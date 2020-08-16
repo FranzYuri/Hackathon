@@ -707,8 +707,9 @@ class SolidMotor:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -748,8 +749,9 @@ class SolidMotor:
 
         Parameters
         ----------
-        filename : list
-            Filenames to save the plots
+        filename : list, string, optional
+            Filenames to save the plots (in the order they are plotted). If not
+            given, no plots will be saved to files.
         
         Return
         ------

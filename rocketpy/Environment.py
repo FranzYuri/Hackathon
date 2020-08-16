@@ -2577,8 +2577,9 @@ class Environment:
 
         Parameters
         ----------
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
         
         Return
         ------
@@ -2696,10 +2697,12 @@ class Environment:
 
         Parameters
         ----------
-        filenameAtm : string
-            Filename to save the atmospheric plots
-        filenameGeneric : string
-            Filename to save the other plots
+        filenameAtm : string, optional
+            Filename to save the atmospheric plots. If not given, no plots will
+            be saved to files.
+        filenameGeneric : string, optional
+            Filename to save the other plots. If not given, no plots will be
+            saved to files.
         
         Return
         ------

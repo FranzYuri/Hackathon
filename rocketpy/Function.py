@@ -1041,8 +1041,9 @@ class Function:
             Setting forcePoints to True will plot all points, as a scatter, in
             which the Function was evaluated in the dataset. Default value is
             False.
-        filename : string
-            Filename to save the plot
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
 
         Returns
         -------
@@ -1130,8 +1131,9 @@ class Function:
         dispType : string, optional
             Display type of plotted graph, which can be surface, wireframe,
             contour, or contourf. Default value is surface.
-        filename : string
-            Filename to save the plot
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
 
         Returns
         -------
@@ -1261,8 +1263,9 @@ class Function:
             Setting forcePoints to True will plot all points, as a scatter, in
             which the Function was evaluated to plot it. Default value is
             False.
-        filename : string
-            Filename to save the plots
+        filename : string, optional
+            Filename to save the plots. If not given, no plots will be saved to
+            files.
 
         Returns
         -------
