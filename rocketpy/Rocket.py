@@ -835,7 +835,7 @@ class Rocket:
               + " m"
         )
         print(
-            "Rocket Length - Diameter Ratio: "
+            "Rocket Length/Diameter Ratio: "
             + "{:.3f}".format((self.NoseLength + self.NoseBaseDistanceToCM + (-self.distanceRocketNozzle))/(2*self.radius))
         )
         print(
