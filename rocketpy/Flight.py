@@ -2309,6 +2309,7 @@ class Flight:
         ax1.plot(
             self.x[:, 1], self.y[:, 1], zs= 0, zdir="z", linestyle="--"
         )
+
         ax1.plot(self.x[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="y", linestyle="--")
         ax1.plot(self.y[:, 1], self.z[:, 1] - self.env.elevation, zs=minXY, zdir="x", linestyle="--")
         ax1.plot(self.x[:, 1], self.y[:, 1], self.z[:, 1] - self.env.elevation, linewidth='2')
@@ -3261,6 +3262,26 @@ class Flight:
         self.plotStabilityAndControlData()
 
         return None
+
+    def animate2(self, start=0, stop=150, fps=3):
+        from vedo import Box, load, datadir, show
+        world = Box([self.x(0), self.y(0), self.z(0)], 2000, 2000, 4000).wireframe()
+
+        plane1 = load(datadir + "cessna.vtk").c("green").addTrail().addShadow(z=-4).scale(100)
+        plane1.pos(self.x(0), self.y(0), self.z(0))  # make up some movement
+        plane1.rotate(-3.14/2, axis=(0,1,0), axis_point=(self.x(0), self.y(0), self.z(0)), rad=True)
+
+        # Setup the scene
+        show(world, plane1, axes=1, viewup="z", interactive=0)
+        timeRange = np.linspace(start, stop, fps * (stop - start))
+        for t in timeRange:
+            angle = np.arccos(2*self.e0(t)**2 - 1)
+            k = np.sin(angle / 2)
+            print([plane1.x(), plane1.y(), plane1.z()])
+            plane1.pos(self.x(t), self.y(t), self.z(t))
+            plane1.rotate(rad=True, angle=angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
+            show(world, plane1)
+            plane1.rotate(rad=True, angle=-angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
 
     def animate(self, start=0, stop=None, fps=12, speed=4, elev=None, azim=None):
         """Plays an animation of the flight. Not implemented yet. Only
