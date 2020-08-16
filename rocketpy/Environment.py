@@ -954,12 +954,12 @@ class Environment:
             
         elif type == "JSON":
            
-            if self.lat == latitude and self.lon == longitude:
+            if self.lat != None and self.lon != None:
                 lat = str(self.lat)
                 lon = str(self.lon)
                 
-            elif self.lat == None and self.lon == None:
-                print("Please set Location")
+            else:
+                print("Please set a valid Location")
 
             url = "https://node.windy.com/forecast/meteogram/ecmwf/{}/{}/?step=undefined".format(lat, lon)
 
@@ -972,15 +972,17 @@ class Environment:
             except:
                 info = None
 
-           
-            temperature=info["data"]["temp-surface"],
-            wind_u=info["data"]["wind_u-surface"],
-            wind_v=info["data"]["wind_v-surface"],  
+            temperature= info["data"]["temp-surface"]
+            wind_u= info["data"]["wind_u-surface"]
+            wind_v= info["data"]["wind_v-surface"]
+            #pressure = info["data"][]
             
-            print('temp-surface:', info["data"]["temp-surface"])
-            print('wind_u-surface:', info["data"]["wind_u-surface"])
-            print('wind_v-surface:', info["data"]["wind_v-surface"])
-                        
+            #self.processCostumAtmosphere(pressure, temperature, wind_u, wind_v)
+
+            #print('temp-surface: {}'.format(info["data"]["temp-surface"]))
+            #print('wind_u-surface: {}'.format(info["data"]["wind_u-surface"]))
+            #print('wind_v-surface: {}'.format(info["data"]["wind_v-surface"]))
+            
         else:
             raise ValueError("Unknown model type.")
 
