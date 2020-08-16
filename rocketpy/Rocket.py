@@ -486,7 +486,7 @@ class Rocket:
         # Return self
         return self.aerodynamicSurfaces[-1]
 
-    def addFins(self, n, span, rootChord, tipChord, distanceToCM, radius=0):
+    def addFins(self, n, finsPlacement, angleBetweenFins, span, rootChord, tipChord, distanceToCM, radius=0):
         """Create a fin set, storing its parameters as part of the
         aerodynamicSurfaces list. Its parameters are the axial position
         along the rocket and its derivative of the coefficient of lift
@@ -496,6 +496,12 @@ class Rocket:
         ----------
         n : int
             Number of fins, from 2 to infinity.
+        finsPlacement: float
+            If the fins are evenly spaced or unevenly spaced
+        angleBetweenFins: list
+            In the case of unevenly spaced fins, specify the angle 
+            between them. Fix a first fin for reference and especify
+            the smallest angular space between that first and the others
         span : int, float
             Fin span in meters.
         rootChord : int, float
@@ -546,9 +552,20 @@ class Rocket:
                 + (1 / 6) * (Cr + Ct - Cr * Ct / (Cr + Ct))
             )
 
-        # Calculate clalpha
-        clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
-        clalpha *= 1 + radius / (s + radius)
+        # Calculate clalpha for unevenly espaced fins or evenly spaced fins
+        if finsPlacement == "unevenly spaced":
+            dihedralAngle = np.zeros(n)
+            clalphaOneFin = np.zeros(n)
+            for i in range (n):
+                dihedralAngle[i] = (angleBetweenFins[i] - 90) * ((2 * np.pi) / 360)
+                if i == 0:
+                    clalphaOneFin[i] = (2 * np.pi * s **2) / (self.area * (1 + 1))
+                else:
+                    clalphaOneFin[i] = 2 * clalphaOneFin[0] * np.cos(dihedralAngle[i]) ** 2
+                clalpha += clalphaOneFin[i]
+        elif finsPlacement == "evenly spaced":
+            clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
+            clalpha *= 1 + radius / (s + radius)
 
         # Store values
         fin = [(0, 0, cpz), clalpha, "Fins"]
