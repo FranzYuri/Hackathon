@@ -22,6 +22,7 @@ from matplotlib import cm
 
 from .Function import Function
 
+
 class Rocket:
 
     """Keeps all rocket and parachute information.
@@ -40,7 +41,7 @@ class Rocket:
         Rocket.distanceRocketPropellant : float
             Distance between rocket's center of mass, without propellant,
             to the center of mass of propellant, in meters. Always positive.
-        
+
         Mass and Inertia attributes:
         Rocket.mass : float
             Rocket's mass without propellant in kg.
@@ -81,7 +82,7 @@ class Rocket:
         Rocket.thrustExcentricityX : float 
             Thrust vector position relative to center of mass in the x
             axis, perpendicular to axis of cylindrical symmetry, in meters. 
-        
+
         Parachute attributes:
         Rocket.parachutes : list
             List of parachutes of the rocket.
@@ -134,7 +135,7 @@ class Rocket:
                 Function of noisyPressureSignal.
             cleanPressureSignalFunction : Function
                 Function of cleanPressureSignal.
- 
+
         Aerodynamic attributes
         Rocket.aerodynamicSurfaces : list
             List of aerodynamic surfaces of the rocket.
@@ -148,7 +149,7 @@ class Rocket:
         Rocket.powerOnDrag : Function
             Rocket's drag coefficient as a function of Mach number when the
             motor is on.
-        
+
         Motor attributes:
         Rocket.motor : Motor
             Rocket's motor. See Motor class for more details.
@@ -205,7 +206,7 @@ class Rocket:
             information. If int or float is given, it is assumed constant. If
             callable, string or array is given, it must be a function o Mach
             number only.
-        
+
         Returns
         -------
         None
@@ -214,7 +215,8 @@ class Rocket:
         self.mass = mass
         self.inertiaI = inertiaI
         self.inertiaZ = inertiaZ
-        self.centerOfMass = distanceRocketPropellant * motor.mass / (mass + motor.mass)
+        self.centerOfMass = distanceRocketPropellant * \
+            motor.mass / (mass + motor.mass)
 
         # Define rocket geometrical parameters in SI units
         self.radius = radius
@@ -286,7 +288,7 @@ class Rocket:
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         self.reducedMass : Function
@@ -322,7 +324,7 @@ class Rocket:
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         self.totalMass : Function
@@ -350,7 +352,7 @@ class Rocket:
         Parameters
         ----------
         None
-        
+
         Returns
         -------
         self.staticMargin : float
@@ -366,11 +368,13 @@ class Rocket:
         if len(self.aerodynamicSurfaces) > 0:
             for aerodynamicSurface in self.aerodynamicSurfaces:
                 self.totalLiftCoeffDer += aerodynamicSurface[1]
-                self.cpPosition += aerodynamicSurface[1] * aerodynamicSurface[0][2]
+                self.cpPosition += aerodynamicSurface[1] * \
+                    aerodynamicSurface[0][2]
             self.cpPosition /= self.totalLiftCoeffDer
 
         # Calculate static margin
-        self.staticMargin = (self.centerOfMass - self.cpPosition) / (2 * self.radius)
+        self.staticMargin = (self.centerOfMass -
+                             self.cpPosition) / (2 * self.radius)
         self.staticMargin.setInputs("Time (s)")
         self.staticMargin.setOutputs("Static Margin (c)")
 
@@ -476,6 +480,14 @@ class Rocket:
         # Calculate clalpha
         clalpha = 2
 
+        # Calculate total lenght of the rocket 
+        self.distanceRocketNose = distanceToCM
+        self.totalLength = abs(self.distanceRocketNozzle) + \
+            self.distanceRocketNose
+
+        # Calculate relation between total lenght and the diameter of the rocket
+        self.relationBetweenTotalLengthAndDiameter = self.totalLength / (2*self.radius)
+
         # Store values
         nose = [(0, 0, cpz), clalpha, "Nose Cone"]
         self.aerodynamicSurfaces.append(nose)
@@ -528,7 +540,7 @@ class Rocket:
         radius = self.radius if radius == 0 else radius
         d = 2 * radius
 
-        # Save geometric parameters for later Fin Flutter Analysis 
+        # Save geometric parameters for later Fin Flutter Analysis
         self.rootChord = Cr
         self.tipChord = Ct
         self.span = s
@@ -547,7 +559,8 @@ class Rocket:
             )
 
         # Calculate clalpha
-        clalpha = (4 * n * (s / d) ** 2) / (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
+        clalpha = (4 * n * (s / d) ** 2) / \
+            (1 + np.sqrt(1 + (2 * Lf / Yr) ** 2))
         clalpha *= 1 + radius / (s + radius)
 
         # Store values
@@ -601,7 +614,7 @@ class Rocket:
             The values are used to add noise to the pressure signal which is
             passed to the trigger function. Default value is (0, 0, 0). Units
             are in Pascal.
-        
+
         Returns
         -------
         parachute : Parachute Object
@@ -688,7 +701,7 @@ class Rocket:
         y : float
             Distance in meters by which the CM is to be translated in
             the y direction relative to geometrical center line.
-        
+
         Returns
         -------
         self : Rocket
@@ -718,7 +731,7 @@ class Rocket:
         y : float
             Distance in meters by which the CP is to be translated in
             the y direction relative to the center of mass axial line.
-        
+
         Returns
         -------
         self : Rocket
@@ -745,7 +758,7 @@ class Rocket:
             Distance in meters by which the the line of action of the
             thrust force is to be translated in the x direction
             relative to the center of mass axial line.
-        
+
         Returns
         -------
         self : Rocket
@@ -765,7 +778,7 @@ class Rocket:
         Parameters
         ----------
         None
-        
+
         Return
         ------
         None
@@ -773,7 +786,8 @@ class Rocket:
         # Print inertia details
         print("Inertia Details")
         print("Rocket Dry Mass: " + str(self.mass) + " kg (No Propellant)")
-        print("Rocket Total Mass: " + str(self.totalMass(0)) + " kg (With Propellant)")
+        print("Rocket Total Mass: " +
+              str(self.totalMass(0)) + " kg (With Propellant)")
 
         # Print rocket geometrical parameters
         print("\nGeometrical Parameters")
@@ -781,7 +795,8 @@ class Rocket:
 
         # Print rocket aerodynamics quantities
         print("\nAerodynamics Stability")
-        print("Initial Static Margin: " + "{:.3f}".format(self.staticMargin(0)) + " c")
+        print("Initial Static Margin: " +
+              "{:.3f}".format(self.staticMargin(0)) + " c")
         print(
             "Final Static Margin: "
             + "{:.3f}".format(self.staticMargin(self.motor.burnOutTime))
@@ -806,7 +821,7 @@ class Rocket:
         Parameters
         ----------
         None
-        
+
         Return
         ------
         None
@@ -814,7 +829,8 @@ class Rocket:
         # Print inertia details
         print("Inertia Details")
         print("Rocket Mass: {:.3f} kg (No Propellant)".format(self.mass))
-        print("Rocket Mass: {:.3f} kg (With Propellant)".format(self.totalMass(0)))
+        print("Rocket Mass: {:.3f} kg (With Propellant)".format(
+            self.totalMass(0)))
         print("Rocket Inertia I: {:.3f} kg*m2".format(self.inertiaI))
         print("Rocket Inertia Z: {:.3f} kg*m2".format(self.inertiaZ))
 
@@ -822,6 +838,9 @@ class Rocket:
         print("\nGeometrical Parameters")
         print("Rocket Maximum Radius: " + str(self.radius) + " m")
         print("Rocket Frontal Area: " + "{:.6f}".format(self.area) + " m2")
+        print("Rocket Total Length: " + "{:.3f}".format(self.totalLength) + " m")
+        print("Relation Rocket Total Length/Diameter: {:.3f}".format(
+            self.relationBetweenTotalLengthAndDiameter))
         print("\nRocket Distances")
         print(
             "Rocket Center of Mass - Nozzle Exit Distance: "
@@ -838,29 +857,38 @@ class Rocket:
             + "{:.3f}".format(self.centerOfMass(0))
             + " m"
         )
+        print(
+            "Rocket Center of Mass - Nose Cone Distance: "
+            + str(self.distanceRocketNose)
+            + " m"
+        )
+
         print("\nAerodynamic Coponents Parameters")
         print("Currently not implemented.")
-
+        
         # Print rocket aerodynamics quantities
         print("\nAerodynamics Lift Coefficient Derivatives")
         for aerodynamicSurface in self.aerodynamicSurfaces:
             name = aerodynamicSurface[-1]
             clalpha = aerodynamicSurface[1]
             print(
-                name + " Lift Coefficient Derivative: {:.3f}".format(clalpha) + "/rad"
+                name +
+                " Lift Coefficient Derivative: {:.3f}".format(clalpha) + "/rad"
             )
 
         print("\nAerodynamics Center of Pressure")
         for aerodynamicSurface in self.aerodynamicSurfaces:
             name = aerodynamicSurface[-1]
             cpz = aerodynamicSurface[0][2]
-            print(name + " Center of Pressure to CM: {:.3f}".format(cpz) + " m")
+            print(
+                name + " Center of Pressure to CM: {:.3f}".format(cpz) + " m")
         print(
             "Distance - Center of Pressure to CM: "
             + "{:.3f}".format(self.cpPosition)
             + " m"
         )
-        print("Initial Static Margin: " + "{:.3f}".format(self.staticMargin(0)) + " c")
+        print("Initial Static Margin: " +
+              "{:.3f}".format(self.staticMargin(0)) + " c")
         print(
             "Final Static Margin: "
             + "{:.3f}".format(self.staticMargin(self.motor.burnOutTime))
@@ -879,7 +907,8 @@ class Rocket:
                 )
             else:
                 print("Ejection signal trigger: " + chute.trigger.__name__)
-            print("Ejection system refresh rate: " + str(chute.samplingRate) + " Hz.")
+            print("Ejection system refresh rate: " +
+                  str(chute.samplingRate) + " Hz.")
             print(
                 "Time between ejection signal is triggered and the "
                 "parachute is fully opened: " + str(chute.lag) + " s"
@@ -896,10 +925,10 @@ class Rocket:
         self.thrustToWeight.plot(lower=0, upper=self.motor.burnOutTime)
 
         #ax = plt.subplot(415)
-        #ax.plot(  , self.rocket.motor.thrust()/(self.env.g() * self.rocket.totalMass()))
+        # ax.plot(  , self.rocket.motor.thrust()/(self.env.g() * self.rocket.totalMass()))
         #ax.set_xlim(0, self.rocket.motor.burnOutTime)
         #ax.set_xlabel("Time (s)")
-        #ax.set_ylabel("Thrust/Weight")
+        # ax.set_ylabel("Thrust/Weight")
         #ax.set_title("Thrust-Weight Ratio")
 
         # Return None
@@ -919,7 +948,8 @@ class Rocket:
         pi = np.pi
         # Calculate angular postions if not given
         if angularPositions is None:
-            angularPositions = np.array(range(numberOfFins)) * 2 * pi / numberOfFins
+            angularPositions = np.array(
+                range(numberOfFins)) * 2 * pi / numberOfFins
         else:
             angularPositions = np.array(angularPositions) * pi / 180
         # Convert gammas to degree
@@ -944,4 +974,5 @@ class Rocket:
         return None
 
     # Variables
-    railButtonPair = namedtuple("railButtonPair", "distanceToCM angularPosition")
+    railButtonPair = namedtuple(
+        "railButtonPair", "distanceToCM angularPosition")
