@@ -537,6 +537,24 @@ class Rocket:
         self.delta = delta
         self.n = n
 
+        Af = Yr * s / 2; # fin area
+        self.AR= 2 * (s**2) / Af
+
+        #pre calculations for trapezoidal fins
+        c1 = ((Yr) /  2) * (self.radius**2) * s
+        c2 = ((Cr + 2 * Ct) / 3) * self.radius * (s**2)
+        c3 = ((Cr + 3 * Ct) / 12) * (s**3);
+        self.trapezoidal_constant = c1 + c2 + c3
+
+        gamac = np.arctan( (Cr - Ct) / (2 * s) ) # mid chord angle
+        self.cos_gamac = np.cos(gamac)
+        
+        self.Y = self.radius + (s/3) * (Cr + 2 * Ct) / Yr #mean aerodynamic chord distance with the radius added
+        self.Cnalfa1_parcial = self.AR * (Af / self.area)
+        self.Cnalfa1_parcial_2 = self.AR / self.cos_gamac
+        self.Clfdelta_parcial = n * self.Y / (2 * self.radius)
+        
+
         # Calculate cp position relative to cm
         if distanceToCM < 0:
             cpz = distanceToCM - (
@@ -967,6 +985,11 @@ class Rocket:
         omega : float
             Rocket's angular velocity Omega 3. Direction 3 is in the rocket's 
             body axis and points in the direction of cylindrical symmetry.
+
+        Notes
+        -----
+        The equations utilized to calculate this section were calculated from
+        Barrowman, 1967 and openrocket documentation by Nikansen, 2013.
         
         Returns
         -------
@@ -976,25 +999,16 @@ class Rocket:
             cylindrical symmetry.
         """
         
-        Af = (self.rootChord + self.tipChord) * self.span / 2; # fin area
-        AR= 2 * (self.span**2) / Af
         beta = np.sqrt( np.abs(1 - ((V/a)**2) ) )
-        gamac = np.arctan( (self.rootChord - self.tipChord) / (2 * self.span) ) # mid chord angle
-        yparcial = (self.rootChord + 2 * self.tipChord) / (self.rootChord + self.tipChord) #mean aerodynamic chord distance
-        Y = self.radius + (self.span/3) * yparcial #mean aerodynamic chord distance with the radius added
+
         Cnalfa0 = 2 * np.pi / beta
-        Cnalfa1 = ( 2 * np.pi * AR * (Af / self.area) ) / (2 + np.sqrt( 4 + ( (beta * AR / (np.cos(gamac)) )**2 ) ) )
+        Cnalfa1 =  2 * np.pi * self.Cnalfa1_parcial / (2 + np.sqrt( 4 + ( (beta * self.Cnalfa1_parcial_2 )**2 ) ) )
 
         # roll forcing moment coefficient derivative
-        Clfdelta = self.n * Cnalfa1 * Y / (2 * self.radius)
+        Clfdelta = Cnalfa1 * self.Clfdelta_parcial
         Clf = Clfdelta * self.delta
 
-        #pre calculations for trapezoidal fins
-        c1 = ((self.rootChord+self.tipChord) /  2) * (self.radius**2) * self.span
-        c2 = ((self.rootChord + 2 * self.tipChord) / 3) * self.radius * (self.span**2)
-        c3 = ((self.rootChord + 3 * self.tipChord) / 12) * (self.span**3);
-
-        Cldomega = (self.n * Cnalfa0  * (c1 + c2 + c3)) * np.cos(self.delta) / (self.area * (2 * self.radius)) 
+        Cldomega = self.n * Cnalfa0  * (self.trapezoidal_constant) * np.cos(self.delta) / (self.area * (2 * self.radius)) 
         Cld = Cldomega * omega/ V
 
         return Clf - Cld 
