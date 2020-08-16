@@ -250,6 +250,11 @@ For more details on contributing, please read [CONTRIBUTING.md](https://github.c
 
 ## Versioning
 
+A minha ideia para esta seção seria o estilo de tabela (ou lista) encontrado no blog [A girls guide to project management](https://www.girlsguidetopm.com/how-to-do-document-version-control/). 
+Com o estilo de numeração X.Y.Z, em que X conta as grandes atualizações (e o lançamento do programa oficialmente),
+Y conta as atualizações menores e Z os ajustes ao longo do tempo para datar melhor cada versão. O estilo de tabela 
+ajuda o projeto pois nele fica mais visível o que cada atualização implementa, e credita aqueles que à implementaram.
+
 **_Still working on this!_**
 
 ## Authors
