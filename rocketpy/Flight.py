@@ -3505,3 +3505,31 @@ class Flight:
                     + str(len(self.parachutes))
                     + "}"
                 )
+    def stability_height(self,type):
+        if type == 'DROGUE':
+            trigger_time = self.parachuteEvents[0][0]
+            parachute = self.parachuteEvents[0][1]
+        else:
+            trigger_time = self.parachuteEvents[1][0]  
+            parachute = self.parachuteEvents[1][1] 
+        vz = self.vz(trigger_time)#vertical velocity at the apogee
+        h0 = self.z(trigger_time)#heigth 
+        g = self.env.g#gravity
+        Radius = parachute.Radius#Parachute Radius 
+        CdS = parachute.CdS#Cds 
+        rho = self.density(trigger_time)#ar density at apogee
+        ka = 1 #low porosoty
+        ma = (ka*4*np.pi*rho*(Radius**3))/3#couple mass
+        M = self.rocket.totalMass(trigger_time)+ma#
+        k = ((CdS)*rho)/(2*M)
+        c1 = np.arctanh(((k/g)**0.5)*vz)/((g*k)**0.5)
+        c2 = np.log10(np.cosh(((g*k)**0.5)*c1))/k+h0 
+        vterminal = (g/k)**0.5#velocidade terminal vertical esperada
+        for i in range(0,10000):
+            if np.abs(np.abs(((-(g/k)**0.5)*(np.tanh(((g*k)**0.5)*(c1+i/500)))))- (vterminal) )< 0.01:
+                t=i/500
+                x = c2 - np.log10(np.cosh(((g*k)**0.5)*(c1+t)))/k
+                return x, t #devolve a posição onde o foguete atinge velocidade terminal e o tempo para que isso ocorra
+    
+
+
