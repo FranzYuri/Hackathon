@@ -117,7 +117,7 @@ Todos os participantes podem ver seus comentários... quem sabe um participante 
 ## Sexta
 21:00 - Abertura
 
-21:00 - Início dos dommits
+21:00 - Início dos commits
 
 ## Sábado
 21:00 - Apresentações parciais
