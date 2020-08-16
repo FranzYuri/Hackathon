@@ -960,7 +960,7 @@ class Rocket:
         
         ## Centers of mass and pressure
         # center of mass of the rocket unloaded
-        plt.scatter(abs(CMtonozzle), 0, color = "darkblue")
+        plt.scatter(abs(CMtonozzle), 0, color = "green", label="CM - Unloaded")
 
         # cone center of pressure
         plt.scatter(tube_length+self.cone_k*self.cone_length,0, color = "darkblue")
@@ -971,6 +971,7 @@ class Rocket:
         # Center of mass of the fully loaded rocket
         #plt.scatter(abs(CMtonozzle)-self.centerOfMass,0, color = "red")
 
+        plt.legend()
         plt.show()
         plt.savefig("RocketGeometry.png")
 
