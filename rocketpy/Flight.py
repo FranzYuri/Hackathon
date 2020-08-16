@@ -4,21 +4,15 @@ __author__ = "Giovani Hidalgo Ceotto"
 __copyright__ = "Copyright 20XX, Projeto Jupiter"
 __license__ = "MIT"
 
-import re
 import math
-import bisect
-import warnings
+import os
 import time
-from datetime import datetime, timedelta
-from inspect import signature, getsourcelines
-from collections import namedtuple
 
 import numpy as np
-from scipy import integrate
-from scipy import linalg
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
+from scipy import integrate
+from vedo import Box, load, datadir, show, Video
+
 
 from .Function import Function
 
@@ -3263,25 +3257,95 @@ class Flight:
 
         return None
 
-    def animate2(self, start=0, stop=150, fps=3):
-        from vedo import Box, load, datadir, show
-        world = Box([self.x(0), self.y(0), self.z(0)], 2000, 2000, 4000).wireframe()
+    def animate_trajectory(self, model_path, video_path, start=0, stop=50, fps=4):
+        """6-DOF Animation of the flight trajectory.
 
-        plane1 = load(datadir + "cessna.vtk").c("green").addTrail().addShadow(z=-4).scale(100)
-        plane1.pos(self.x(0), self.y(0), self.z(0))  # make up some movement
-        plane1.rotate(-3.14/2, axis=(0,1,0), axis_point=(self.x(0), self.y(0), self.z(0)), rad=True)
+        Parameters
+        ----------
+        model_path : str
+            Object model path, it can be a file exported from cad or other type of
+            3D object.
+
+        video_path: str
+            Path in which the video will be saved.
+
+        start: int
+            Time which the flight animation will be started
+
+        stop: int
+            Time which the flight animation will end
+
+        fps: int
+            Frame rate of the video that will be generated
+
+        Return
+        ------
+        None
+        """
+        world = Box([self.x(0), self.y(0), self.z(0)], 2000, 2000, 4000).wireframe()
+        video = Video(backend='cv2', name=os.path.join(video_path, 'trajectory_animation.mp4'))
+
+        rocket = load(model_path).addTrail().scale(0.2)
+        rocket.pos(self.x(0), self.y(0), self.z(0))  # make up some movement
+        rocket.rotate(3.14/2, axis=(0,1,0), axis_point=(self.x(0), self.y(0), self.z(0)), rad=True)
 
         # Setup the scene
-        show(world, plane1, axes=1, viewup="z", interactive=0)
+        show(world, rocket, axes=1, viewup="z", interactive=0)
         timeRange = np.linspace(start, stop, fps * (stop - start))
         for t in timeRange:
             angle = np.arccos(2*self.e0(t)**2 - 1)
             k = np.sin(angle / 2)
-            print([plane1.x(), plane1.y(), plane1.z()])
-            plane1.pos(self.x(t), self.y(t), self.z(t))
-            plane1.rotate(rad=True, angle=angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
-            show(world, plane1)
-            plane1.rotate(rad=True, angle=-angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
+            rocket.pos(self.x(t), self.y(t), self.z(t))  # make up some movement
+            rocket.rotate(rad=True, angle=angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
+            show(world, rocket)
+            video.addFrame()
+            rocket.rotate(rad=True, angle=-angle, axis_point=(self.x(t), self.y(t), self.z(t)), axis=(self.e1(t) / k, self.e2(t) / k, self.e3(t) / k))
+        video.close()
+
+    def animate_rotation(self, model_path, video_path, start=0, stop=50, fps=4):
+        """Rocket attitude during the flight.
+
+        Parameters
+        ----------
+        model_path : str
+            Object model path, it can be a file exported from cad or other type of
+            3D object.
+
+        video_path: str
+            Path in which the video will be saved.
+
+        start: int
+            Time which the flight animation will be started
+
+        stop: int
+            Time which the flight animation will end
+
+        fps: int
+            Frame rate of the video that will be generated
+
+        Return
+        ------
+        None
+        """
+        world = Box([self.x(0), self.y(0), self.z(0)], 200, 200, 2000).wireframe()
+        video = Video(backend='cv2', name=os.path.join(video_path, 'rotation_animation.mp4'))
+
+        rocket = load(model_path).scale(2)
+        rocket.pos(self.x(0), self.y(0), self.z(0))  # make up some movement
+        rocket.rotate(3.14/2, axis=(0,1,0), axis_point=(self.x(0), self.y(0), self.z(0)), rad=True)
+
+        # Setup the scene
+        show(world, rocket, axes=1, viewup="z", interactive=0)
+        timeRange = np.linspace(start, stop, fps * (stop - start))
+        for t in timeRange:
+            angle = np.arccos(2*self.e0(t)**2 - 1)
+            k = np.sin(angle / 2)
+            axis = (self.e1(t) / k, self.e2(t) / k, self.e3(t) / k)
+            rocket.rotate(rad=True, angle=angle, axis_point=(self.x(0), self.y(0), self.z(0)), axis=axis)
+            show(world, rocket)
+            video.addFrame()
+            rocket.rotate(rad=True, angle=-angle, axis_point=(self.x(0), self.y(0), self.z(0)), axis=axis)
+        video.close()
 
     def animate(self, start=0, stop=None, fps=12, speed=4, elev=None, azim=None):
         """Plays an animation of the flight. Not implemented yet. Only
