@@ -240,9 +240,9 @@ TestFlight.allInfo()
 
 Contributions are made via Issues and Pull Requests (PRs). Issues are made to report problems with the library, request 
 a new feature, or to discuss potential changes before a PR is created. If you find an Issue that adress the problem you're 
-having, please add your own reproduction information or reaction to the Issue rather than creating a new one. For the PRs on the 
-other hand, we follow the ["fork-and-pull" Git workflow](https://github.com/susam/gitpr), and in general PRs should addres one of the 
-issues in our ["Pull Requests list"](https://github.com/giovaniceotto/RocketPy/blob/master/CONTRIBUTING.md#pull-requests).
+having, please add your own reproduction information or reaction to the Issue rather than creating a new one. For the PRs,
+we normally follow the ["fork-and-pull" Git workflow](https://github.com/susam/gitpr), and in general PRs should address one of the 
+issues in our [Pull Requests "problems list"](https://github.com/giovaniceotto/RocketPy/blob/master/CONTRIBUTING.md#pull-requests).
 
 By participating and contributing to this project, you agree to uphold our [Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
 
