@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+import plotly.express as px
 
 class Function:
     """Class converts a python function or a data sequence into an object
@@ -1071,16 +1072,18 @@ class Function:
         y = self.getValue(x.tolist())
         # Plots function
         if forcePoints:
-            plt.scatter(x, y, marker="o")
-        plt.plot(x, y)
+            #plt.scatter(x, y, marker="o")
+            px.scatter(x=x, y=y, color = x)
+        #plt.plot(x, y)
+        px.scatter(x=x, y=y, labels=dict(x=self.__inputs__[0].title(), y=self.__outputs__[0].title()), color = m, title = self.__outputs__[0].title() + " x " + self.__inputs__[0].title())
         # Turn on grid and set title and axis
-        plt.grid(True)
-        plt.title(self.__outputs__[0].title() + " x " + self.__inputs__[0].title())
-        plt.xlabel(self.__inputs__[0].title())
-        plt.ylabel(self.__outputs__[0].title())
-        plt.show()
-        if returnObject:
-            return fig, ax
+        #plt.grid(True)
+        #plt.title(self.__outputs__[0].title() + " x " + self.__inputs__[0].title())
+        #plt.xlabel(self.__inputs__[0].title())
+        #plt.ylabel(self.__outputs__[0].title())
+        #plt.show()
+        #if returnObject:
+            #return fig, ax
 
     def plot2D(
         self,
