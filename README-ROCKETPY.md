@@ -238,7 +238,15 @@ TestFlight.allInfo()
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/giovaniceotto/RocketPy/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us. - **_Still working on this!_**
+Contributions are made via Issues and Pull Requests (PRs). Issues are made to report problems with the library, request 
+a new feature, or to discuss potential changes before a PR is created. If you find an Issue that adress the problem you're 
+having, please add your own reproduction information or reaction to the Issue rather than creating a new one. For the PRs on the 
+other hand, we follow the ["fork-and-pull" Git workflow](https://github.com/susam/gitpr), and in general PRs should addres one of the 
+issues in our ["Pull Requests list"](https://github.com/giovaniceotto/RocketPy/blob/master/CONTRIBUTING.md#pull-requests).
+
+By participating and contributing to this project, you agree to uphold our [Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
+
+For more details on contributing, please read [CONTRIBUTING.md](https://github.com/giovaniceotto/RocketPy/blob/master/CONTRIBUTING.md).
 
 ## Versioning
 
@@ -256,7 +264,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## Acknowledgments
 
-I want to thank all of the members of Projeto Jupiter, both those who helped with the coding and the ones who supported and 
+I want to thank all the members of Projeto Jupiter, both those who helped with the coding and the ones who supported and 
 encouraged me through all this proccess. Without them maybe this idea would never exist, and I cannot express how much I 
 apprecciate the learning opportunities this project offered me.
 
