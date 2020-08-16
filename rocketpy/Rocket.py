@@ -472,6 +472,7 @@ class Rocket:
             cpz = distanceToCM + k * length
         else:
             cpz = distanceToCM - k * length
+      
 
         # Calculate clalpha
         clalpha = 2
@@ -479,6 +480,11 @@ class Rocket:
         # Store values
         nose = [(0, 0, cpz), clalpha, "Nose Cone"]
         self.aerodynamicSurfaces.append(nose)
+        self.NoseLength = length
+        if distanceToCM > 0:
+            self.NoseBaseDistanceToCM = distanceToCM
+        else:
+            self.NoseBaseDistanceToCM = -distanceToCM
 
         # Refresh static margin calculation
         self.evaluateStaticMargin()
@@ -823,6 +829,20 @@ class Rocket:
         print("Rocket Maximum Radius: " + str(self.radius) + " m")
         print("Rocket Frontal Area: " + "{:.6f}".format(self.area) + " m2")
         print("\nRocket Distances")
+        print(
+              "Rocket Total Length: "
+              + str(self.NoseLength + self.NoseBaseDistanceToCM + (-self.distanceRocketNozzle))
+              + " m"
+        )
+        print(
+            "Rocket Length - Diameter Ratio: "
+            + "{:.3f}".format((self.NoseLength + self.NoseBaseDistanceToCM + (-self.distanceRocketNozzle))/(2*self.radius))
+        )
+        print(
+              "Rocket Center of Mass - Nose Tip: "
+              + str(self.NoseLength + self.NoseBaseDistanceToCM)
+              + " m"
+        )
         print(
             "Rocket Center of Mass - Nozzle Exit Distance: "
             + str(self.distanceRocketNozzle)
