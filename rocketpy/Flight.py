@@ -2325,20 +2325,32 @@ class Flight:
         #ax1.set_xlim3d([minXY, maxXY])
         #ax1.view_init(15, 45)
         #plt.show()
-        
-        fig = make_subplots(rows=1, cols=2, specs=[[{"type": "scene"}, {"type": "scene"}]])
-        
-        fig.add_trace(self.x[:, 1], y=self.y[:, 1], z=self.z[:, 1] - self.env.elevation), row=1, col=2)
-
-        fig.add_trace(go.Scatter3d(x=m, y=n, z=o), row=1, col=2)
-        
-        fig.update_layout(height=600, width=700, title_text="Flight Trajectory")
-        
-        fig.update_xaxes(title_text="X - East (m)", range=[minXY, maxXY], row=1, col=1)
-        #fig.update_xaxes(title_text="xaxis 2 title", range=[10, 50], row=1, col=2)
-        
-        fig.update_yaxes(title_text="Y - North (m)", range=[minXY, maxXY], row=1, col=1)
-        #fig.update_yaxes(title_text="yaxis 2 title", range=[40, 80], row=1, col=2)
+              
+        fig = go.Figure(
+            data=[go.Scatter3d(x=self.x[:, 1], y=self.y[:, 1], z=self.z[:, 1] - self.env.elevation,
+                               mode="lines",
+                               line=dict(width=2, color="blue")),
+                  go.Scatter3d(x=self.x[:, 1], y=self.y[:, 1], z=self.z[:, 1] - self.env.elevation,
+                               mode="lines",
+                               line=dict(width=2, color="blue"))],
+            layout=go.Layout(
+                xaxis=dict(range=[xm, xM], autorange=False, zeroline=False),
+                yaxis=dict(range=[ym, yM], autorange=False, zeroline=False),
+                title_text="Plot a 3D graph of the trajectory", hovermode="closest",
+                updatemenus=[dict(type="buttons",
+                                  buttons=[dict(label="Play",
+                                                method="animate",
+                                                args=[None])])]),
+            frames=[go.Frame(
+                data=[go.Scatter3d(
+                    x=[self.x[:, 1][k]],
+                    y=[self.y[:, 1][k]],
+                    z=[self.z[:, 1] - self.env.elevation[k]],
+                    mode="markers",
+                    marker=dict(color="red", size=10))])
+                
+                for k in range(0,len(self.x[:, 1]))]
+        )
         
         fig.show()
         
