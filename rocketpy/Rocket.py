@@ -758,6 +758,75 @@ class Rocket:
         # Return self
         return self
 
+    def FinOptmize(self, n, span, rootChord, tipChord, distanceToCM, desiredStaticMargin = 2, optimize = False):
+        """Takes rocket parameters and calculates the geometrical parameters of optimized fins. """
+        # Initial guess
+        x = [rootChord,tipChord,span]
+
+        # Retrieve parameters for calculations
+        desired = desiredStaticMargin
+        Lf = np.sqrt((x[0] / 2 - x[1] / 2) ** 2 + x[2] ** 2)
+        radius = self.radius
+        noseLength = self.noseLength
+        distanceNosetoCM = self.distanceNoseToCM
+        distanceTailtoCM = self.distanceTailToCM
+        tailLength = self.tailLength
+        tailRadius = self.tailBottomRadius
+        Ctail = self.clTail
+
+        # Calculates static margin with geometric parameters as variables
+        def staticMargin(x):
+            Cnose = 2
+            Xnose = noseLength/2
+            Cfins = lambda x: (1+(/(radius+x[2])))*(4*n*(x[2]/(2*radius))**2)/
+                              (1 + np.sqrt(1+((2*Lf)/(x[1]+x[0]))**2))
+            Xfins = lambda x: distanceToCM + distanceNoseToCM + ((x[0] - x[1])/3)*
+                              ((x[0]+2*x[1])/(x[0]+x[1])) + (1/6)*(x[0]+x[1]-((x[0]*x[1])/(x[0]+x[1])))
+            Xtail = lambda x: distanceTailtoCM + distanceNosetoCM + (tailLength/3)*
+                              (1+((1-(radius/tailRadius))/(1-(radius/tailRadius)**2)))
+            X = (Cnose*Xnose + Cfins*Xfins + Ctail*Xtail)/(Cnose + Cfins + Ctail)
+            return (X - distanceNoseToCM)/(2*R)
+
+        # Calculates function that will be minimezed
+        def merito(x,sign=-1):
+            Xsm = staticMargin(x)
+            Af = lambda x: (x[0] + x[1]) * x[2] / 2
+            sigma=0.2
+            return sign*((np.exp(-1*((((Xsm - desired)/(2*sigma)))**2)))/Af)
+
+        # Constraints 1 and 2 refers to desiredStaticMargin - 0.5 <= staticMargin(x) <= 0.5 + desiredStaticMargin
+        # while constraints 3 and 4 refers to 0.5 <= span/root <= 1.5 
+
+        def constraint1(x):
+            # 0 <= staticMargin(x) - desiredStaticMargin + 0.5
+            return staticMargin(x) - desired + 0.5
+        def constraint2(x):
+            # 0 <= 0.5 + desiredStaticMargin - staticMargin(x) 
+            return 0.5 + desired - staticMargin(x)
+        def constraint3(x):
+            # 0 <= (span/root) - 0.5
+            return (x[2]/x[0]) - 0.5
+        def constraint4(x):
+            # 0 <= 1.5 - (span/root)
+            return 1.5 - (x[2]/x[0]) 
+
+        # Defining minimum and maximuns for geometric parameters
+        b1 = (radius,2*radius)     #minimun and maximum for root
+        b2 = (0.5*radius,2*radius) #minimun and maximum for tip
+        b3 = (0.5*radius,3*radius) #minimun and maximum for span
+
+        # Defining necessary parameters for minimeze
+        bnds = (b1,b2,b3)
+        con1 = {'type': 'ineq', 'fun': constraint1}
+        con2 = {'type': 'ineq', 'fun': constraint2}
+        con3 = {'type': 'ineq', 'fun': constraint3}
+        con4 = {'type': 'ineq', 'fun': constraint4}
+        con = ([con1,con2,con3,con4])
+            
+        solution = minimize(merito,x0,method='SLSQP',bounds=bnds,constraints=con)
+        x = solution.x
+        return x
+
     def info(self):
         """Prints out a summary of the data and graphs available about
         the Rocket.
