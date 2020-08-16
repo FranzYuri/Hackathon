@@ -482,8 +482,7 @@ class Rocket:
 
         # Calculate total lenght of the rocket 
         self.distanceRocketNose = distanceToCM
-        self.totalLength = abs(self.distanceRocketNozzle) + \
-            self.distanceRocketNose
+        self.totalLength = abs(self.distanceRocketNozzle) + self.distanceRocketNose
 
         # Calculate relation between total lenght and the diameter of the rocket
         self.relationBetweenTotalLengthAndDiameter = self.totalLength / (2*self.radius)
