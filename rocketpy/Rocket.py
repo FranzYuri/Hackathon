@@ -19,6 +19,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from lambdaJSON import lambdaJSON
 
 from .Function import Function
 
@@ -238,12 +239,14 @@ class Rocket:
 
         # Aerodynamic data initialization
         self.aerodynamicSurfaces = []
+        self.aerodynamicSurfacesInitializers = {}
         self.cpPosition = 0
         self.staticMargin = Function(
             lambda x: 0, inputs="Time (s)", outputs="Static Margin (c)"
         )
 
         # Define aerodynamic drag coefficients
+        self.powerOffDragInitializer = powerOffDrag
         self.powerOffDrag = Function(
             powerOffDrag,
             "Mach Number",
@@ -251,6 +254,8 @@ class Rocket:
             "spline",
             "constant",
         )
+
+        self.powerOnDragInitializer = powerOnDrag
         self.powerOnDrag = Function(
             powerOnDrag,
             "Mach Number",
@@ -406,6 +411,8 @@ class Rocket:
         self : Rocket
             Object of the Rocket class.
         """
+        self.aerodynamicSurfacesInitializers.update({"Tail": (topRadius, bottomRadius, length, distanceToCM)})
+
         # Calculate ratio between top and bottom radius
         r = topRadius / bottomRadius
 
@@ -457,6 +464,8 @@ class Rocket:
         self : Rocket
             Object of the Rocket class.
         """
+        self.aerodynamicSurfacesInitializers.update({"Nose cone": (length, kind, distanceToCM)})
+
         # Analyze type
         if kind == "conical":
             k = 1 - 1 / 3
@@ -518,6 +527,7 @@ class Rocket:
         self : Rocket
             Object of the Rocket class.
         """
+        self.aerodynamicSurfacesInitializers.update({"Fin set": (n, span, rootChord, tipChord, distanceToCM, radius)})
 
         # Retrieve parameters for calculations
         Cr = rootChord
@@ -619,6 +629,7 @@ class Rocket:
         parachute.lag = lag
         parachute.CdS = CdS
         parachute.name = name
+        parachute.noiseInitializer = noise
         parachute.noiseBias = noise[0]
         parachute.noiseDeviation = noise[1]
         parachute.noiseCorr = (noise[2], (1 - noise[2] ** 2) ** 0.5)
@@ -945,3 +956,62 @@ class Rocket:
 
     # Variables
     railButtonPair = namedtuple("railButtonPair", "distanceToCM angularPosition")
+    
+    def exportRocket(self):
+        """Creates dictionary to represent Rocket object
+
+        Returns
+        -------
+        dict
+            Dictionary representing the Rocket object
+        """
+
+        lj = lambdaJSON(globs = (lambda: globals()))
+
+        parachutesDict = {}
+
+        for parachute in self.parachutes:
+            parachutesDict.update({parachute.name: {
+                                        "CdS": parachute.CdS,
+                                        "trigger": parachute.trigger,
+                                        "samplingRate": parachute.samplingRate,
+                                        "lag": parachute.lag,
+                                        "noise": list(parachute.noiseInitializer)
+                                   }
+                                  })
+
+
+        return {
+            "mass": self.mass,
+            "inertiaI": self.inertiaI,
+            "inertiaZ": self.inertiaZ,
+            "radius": self.radius,
+            "distanceRocketNozzle":  self.distanceRocketNozzle,
+            "distanceRocketPropellant": self.distanceRocketPropellant,
+            "powerOffDrag": self.powerOffDragInitializer,
+            "powerOnDrag": self.powerOnDragInitializer,
+            "railButtons": self.railButtons[0],
+            "NoseCone": {
+                "length": self.aerodynamicSurfacesInitializers["Nose cone"][0],
+                "kind": self.aerodynamicSurfacesInitializers["Nose cone"][1],
+                "distanceToCM": self.aerodynamicSurfacesInitializers["Nose cone"][2],
+            },
+            "FinSet": {
+                "nFins": self.aerodynamicSurfacesInitializers["Fin set"][0],
+                "span": self.aerodynamicSurfacesInitializers["Fin set"][1],
+                "rootChord": self.aerodynamicSurfacesInitializers["Fin set"][2],
+                "tipChord": self.aerodynamicSurfacesInitializers["Fin set"][3],
+                "distanceToCM": self.aerodynamicSurfacesInitializers["Fin set"][4],
+                "radius": self.aerodynamicSurfacesInitializers["Fin set"][5]
+            },
+            "Tail": {
+                "topRadius": self.aerodynamicSurfacesInitializers["Tail"][0],
+                "bottomRadius": self.aerodynamicSurfacesInitializers["Tail"][1],
+                "length": self.aerodynamicSurfacesInitializers["Tail"][2],
+                "distanceToCM": self.aerodynamicSurfacesInitializers["Tail"][3],
+            },
+            "parachutes": parachutesDict
+        }
+
+        print(type(self.aerodynamicSurfacesInitializers["Nose cone"][2]))
+        

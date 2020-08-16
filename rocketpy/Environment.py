@@ -345,7 +345,7 @@ class Environment:
         # Reanalysis or Ensemble
         if self.atmosphericModelType in ["Forecast", "Reanalysis", "Ensemble"]:
             self.setAtmosphericModel(
-                self.atmosphericModelFile, self.atmosphericModelDict
+                self.atmosphericModelFile, self.atmosphericModelDictionary
             )
 
         return None
@@ -646,17 +646,31 @@ class Environment:
         # Save atmospheric model type
         self.atmosphericModelType = type
 
+        # Save file
+        self.atmosphericModelFile = file
+
+        # Save atmospheric model pressure
+        self.atmosphericModelDictionary = dictionary
+
+        # Save atmospheric model pressure
+        self.atmosphericModelPressure = pressure
+
+        # Save atmospheric model temperature
+        self.atmosphericModelTemperature = temperature
+
+        # Save wind_u
+        self.wind_u = wind_u
+
+        # Save wind_v
+        self.wind_v = wind_v
+
         # Handle each case
         if type == "StandardAtmosphere":
             self.processStandardAtmosphere()
         elif type == "WyomingSounding":
             self.processWyomingSounding(file)
-            # Save file
-            self.atmosphericModelFile = file
         elif type == "NOAARucSounding":
             self.processNOAARUCSounding(file)
-            # Save file
-            self.atmosphericModelFile = file
         elif type == "Forecast" or type == "Reanalysis":
             # Process default forecasts if requested
             if file == "GFS":
@@ -834,9 +848,6 @@ class Environment:
                     )
                 # Process forecast or reanalysis
                 self.processForecastReanalysis(file, dictionary)
-            # Save dicitonary and file
-            self.atmosphericModelFile = file
-            self.atmosphericModelDict = dictionary
         elif type == "Ensemble":
             # Process default forecasts if requested
             if file == "GEFS":
@@ -944,9 +955,6 @@ class Environment:
                     }
                 # Process forecast or reanalysis
                 self.processEnsemble(file, dictionary)
-            # Save dicitonary and file
-            self.atmosphericModelFile = file
-            self.atmosphericModelDict = dictionary
         elif type == "CostumAtmosphere":
             self.processCostumAtmosphere(pressure, temperature, wind_u, wind_v)
         else:
@@ -2918,4 +2926,32 @@ class Environment:
         self.selectEnsembleMember(currentMember)
 
         return None
+
+    def exportEnvironment(self):
+        """Export simulation inputs of Environment class.
+
+        Parameters
+        ----------
+        None
+        
+        Return
+        ------
+        dict
+            Dictionary representing the Environment object
+        """
+        return {
+            "railLength": self.rL,
+            "gravity": self.g,
+            "date": [self.date.year, self.date.month, self.date.day, self.date.hour],
+            "latitude": self.lat,
+            "longitude": self.lon,
+            "elevation": self.elevation,
+            "atmosphericModelType": self.atmosphericModelType,
+            "atmosphericModelFile": self.atmosphericModelFile,
+            "atmosphericModelDictionary": self.atmosphericModelDictionary,
+            "atmosphericModelPressure": self.atmosphericModelPressure,
+            "atmosphericModelTemperature": self.atmosphericModelTemperature,
+            "wind_u": self.wind_u,
+            "wind_v": self.wind_v
+        }
 

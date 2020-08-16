@@ -600,8 +600,10 @@ class Flight:
         self.rtol = rtol
         self.atol = atol
         self.initialSolution = initialSolution
+        self.initialSolutionInitializer = initialSolution
         self.timeOvershoot = timeOvershoot
         self.terminateOnApogee = terminateOnApogee
+        self.verbose = verbose
 
         # Modifying Rail Length for a better out of rail condition
         upperRButton = max(self.rocket.railButtons[0])
@@ -3328,6 +3330,28 @@ class Flight:
         while i < len(nodeList) - 1:
             yield i, nodeList[i]
             i += 1
+    
+    def exportFlight(self):
+        """Creates dictionary to represent Flight object
+
+        Returns
+        -------
+        dict
+            Dictionary representing the Flight object
+        """
+        return {
+            "inclination": self.inclination,
+            "heading": self.heading,
+            "initialSolution": self.initialSolutionInitializer,
+            "terminateOnApogee": self.terminateOnApogee,
+            "maxTime": self.maxTime,
+            "maxTimeStep": self.maxTimeStep if self.maxTimeStep < np.inf else 1.7976931348623157e+308,
+            "minTimeStep": self.minTimeStep,
+            "rtol": self.rtol,
+            "atol": self.atol,
+            "timeOvershoot": self.timeOvershoot,
+            "verbose": self.verbose
+        }
 
     class FlightPhases:
         def __init__(self, init_list=[]):
@@ -3505,3 +3529,4 @@ class Flight:
                     + str(len(self.parachutes))
                     + "}"
                 )
+    

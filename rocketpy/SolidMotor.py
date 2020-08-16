@@ -182,6 +182,8 @@ class SolidMotor:
         self.interpolate = interpolationMethod
         self.burnOutTime = burnOut
 
+        self.reshapeThrustCurveInitializer = reshapeThrustCurve
+
         # Check if thrustSource is csv, eng, function or other
         if isinstance(thrustSource, str):
             # Determine if csv or eng
@@ -210,6 +212,7 @@ class SolidMotor:
         if callable(thrustSource) or isinstance(thrustSource, (int, float)):
             self.thrust.setDiscrete(0, burnOut, 50, self.interpolate, "zero")
 
+
         # Reshape curve and calculate impulse
         if reshapeThrustCurve:
             self.reshapeThrustCurve(*reshapeThrustCurve)
@@ -217,6 +220,7 @@ class SolidMotor:
             self.evaluateTotalImpulse()
 
         # Define motor attributes
+        self.thrustSource = thrustSource
         # Grain and nozzle parameters
         self.nozzleRadius = nozzleRadius
         self.throatRadius = throatRadius
@@ -808,4 +812,27 @@ class SolidMotor:
         self.inertiaZDot()
 
         return None
+
+    def exportSolidMotor(self):
+        """Creates dictionary to represent SolidMotor object
+
+        Returns
+        -------
+        dict
+            Dictionary representing the SolidMotor object
+        """
+        return {
+            "thrustSource": self.thrustSource,
+            "burnOut": self.burnOutTime,
+            "grainNumber": self.grainNumber,
+            "grainSeparation": self.grainSeparation,
+            "grainDensity": self.grainDensity,
+            "grainOuterRadius": self.grainOuterRadius,
+            "grainInitialInnerRadius": self.grainInitialInnerRadius,
+            "grainInitialHeight": self.grainInitialHeight,
+            "nozzleRadius": self.nozzleRadius,
+            "throatRadius": self.throatRadius,
+            "reshapeThrustCurve": self.reshapeThrustCurveInitializer,
+            "interpolationMethod": self.interpolate
+        }
 
