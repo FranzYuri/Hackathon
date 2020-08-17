@@ -496,10 +496,11 @@ class Rocket:
         ----------
         n : int
             Number of fins, from 2 to infinity.
-        finsPlacement: float
-            If the fins are evenly spaced or unevenly spaced
-        angleBetweenFins: list
-            In the case of unevenly spaced fins, specify the angle 
+        finsPlacement: string
+            "evenly spaced" or "unevenly spaced" fins
+        angleBetweenFins: list of ints and floats
+            Not necessary in case of evenly spaced fins, insert a empty
+            list. In the case of unevenly spaced fins, specify the angle 
             between them. Pin a first fin for reference and especify
             the smallest angular space between that first and the others
         span : int, float
